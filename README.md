@@ -1,5 +1,8 @@
 Dlib-MK
 =============
-Dspace 4.2 theme used by Digital Library of Macedonia
+Flat responsive theme for DSspace 4.2 (XMLUI) used by Digital Library of Macedonia
 
-This theme is based on Mirage theme by @mire
+Thanks: This theme is based on Mirage theme developed by @mire as sort of a framwork
+
+Features
+=============
