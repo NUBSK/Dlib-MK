@@ -6,11 +6,13 @@ Thanks: This theme is based on Mirage theme developed by @mire as sort of a fram
 
 Features
 =============
-Flat gesign
-FontAwesome 3.2.1
-Discovery facets moved from sidebar > above footer as separate module
-Responsive slides
-jQuery Sidr for mobile menus
-Search bar moved to breadcrumbs (ds-trail)
-Dissabled Community list and search bar on homepage
+<ul>
+<li>Flat gesign</li>
+<li>FontAwesome 3.2.1</li>
+<li>Discovery facets moved from sidebar > above footer as separate module</li>
+<li>Responsive slides</li>
+<li>jQuery Sidr for mobile menus</li>
+<li>Search bar moved to breadcrumbs (ds-trail)</li>
+<li>Dissabled Community list and search bar on homepage</li>
+</ul>
 
