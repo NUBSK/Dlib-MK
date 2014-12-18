@@ -44,21 +44,18 @@
     <xsl:template match="dri:options">
         <div id="ds-options-wrapper">
             <div id="ds-options">
-<<<<<<< HEAD
                 <h1 id="ds-feed-option-head" class="ds-option-set-head" style="margin:15px 0 10px;">
                     <i18n:text>&#xf0a1; Споделете</i18n:text>
                 </h1>
                 <div id="ds-social-option" class="ds-option-set">
                     <xsl:call-template name="SocialLinks"/>
                 </div>
-=======
         		<h1 id="ds-feed-option-head" class="ds-option-set-head" style="margin:15px 0 10px;">
         			<i18n:text>&#xf0a1; Споделете</i18n:text>
         		</h1>
         		<div id="ds-social-option" class="ds-option-set">
         			<xsl:call-template name="SocialLinks"/>
         		</div>
->>>>>>> 35d2240849aeb4d540d97965cf1be6d92f01cd58
                 <!-- Once the search box is built, the other parts of the options are added -->
                 <xsl:apply-templates/>
 
@@ -98,7 +95,6 @@
                         <xsl:value-of select="$context-path"/>
                         <xsl:text>/static/icons/feed.png) no-repeat</xsl:text>
                     </xsl:attribute> -->
-
                     <xsl:choose>
                         <xsl:when test="contains(., 'rss_1.0')">
                             <xsl:text>RSS 1.0</xsl:text>
@@ -133,11 +129,9 @@
             </ul>
         </li>
     </xsl:template>
-
     <!-- Quick patch to remove empty lists from options -->
     <xsl:template match="dri:options//dri:list[count(child::*)=0]" priority="5" mode="nested">
     </xsl:template>
     <xsl:template match="dri:options//dri:list[count(child::*)=0]" priority="5">
     </xsl:template>
-
 </xsl:stylesheet>
