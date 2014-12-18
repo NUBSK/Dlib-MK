@@ -44,40 +44,36 @@
     <xsl:template match="dri:options">
         <div id="ds-options-wrapper">
             <div id="ds-options">
-		<h1 id="ds-feed-option-head" class="ds-option-set-head" style="margin:15px 0 10px;">
-			<i18n:text>&#xf0a1; Споделете</i18n:text>
-		</h1>
-		<div id="ds-social-option" class="ds-option-set">
-			<xsl:call-template name="SocialLinks"/>
-		</div>
-        <!-- Once the search box is built, the other parts of the options are added -->
-        <xsl:apply-templates/>
+        		<h1 id="ds-feed-option-head" class="ds-option-set-head" style="margin:15px 0 10px;">
+        			<i18n:text>&#xf0a1; Споделете</i18n:text>
+        		</h1>
+        		<div id="ds-social-option" class="ds-option-set">
+        			<xsl:call-template name="SocialLinks"/>
+        		</div>
+                <!-- Once the search box is built, the other parts of the options are added -->
+                <xsl:apply-templates/>
 
-        <!-- DS-984 Add RSS Links to Options Box -->
-        <xsl:if test="count(/dri:document/dri:meta/dri:pageMeta/dri:metadata[@element='feed']) != 0">
-            <h1 id="ds-feed-option-head" class="ds-option-set-head">
-                <i18n:text>xmlui.feed.header</i18n:text>
-            </h1>
-        <div id="ds-feed-option" class="ds-option-set">
-			<ul class="social">
-				<li><a href="https://www.facebook.com/dlib.mk" target="_blank" title="Dlib.mk on Facebook"><span class="icon-facebook icon-3x" /></a></li>
-				<li><a href="https://twitter.com/dlibmk" target="_blank" title="Dlib.mk on Twitter"><span class="icon-twitter icon-3x" /></a></li>
-				<li><a href="https://github.com/NUBSK" target="_blank" title="Dlib.mk on GitHub"><span class="icon-github-alt icon-3x" /></a></li>
-			</ul>
-			<ul>
-				<xsl:call-template name="addRSSLinks"/>
-			</ul>
-		</div>
-		</xsl:if>
-
-
+                <!-- DS-984 Add RSS Links to Options Box -->
+                <h1 id="ds-feed-option-head" class="ds-option-set-head">
+                    <i18n:text>xmlui.feed.header</i18n:text>
+                </h1>
+                <div id="ds-feed-option" class="ds-option-set">
+                    <ul>
+                        <li><a href="https://www.facebook.com/dlib.mk" target="_blank" title="Dlib.mk on Facebook"><span class="icon-facebook icon-3x" /></a></li>
+                        <li><a href="https://twitter.com/dlibmk" target="_blank" title="Dlib.mk on Twitter"><span class="icon-twitter icon-3x" /></a></li>
+                        <li><a href="https://github.com/NUBSK" target="_blank" title="Dlib.mk on GitHub"><span class="icon-github-alt icon-3x" /></a></li>
+                    </ul>
+                    <ul>
+                        <xsl:call-template name="addRSSLinks"/>
+                    </ul>
+                </div>
             </div>
         </div>
     </xsl:template>
     <xsl:template name="SocialLinks">
-		<ul>
-			<li><span class='st_sharethis_custom' displayText='Share'><span class="icon-facebook icon-2x">&#160;</span><span class="icon-twitter icon-2x">&#160;</span><span class="icon-google-plus icon-2x">&#160;</span><span class="icon-linkedin icon-2x">&#160;</span><span class="icon-pinterest icon-2x">&#160;</span></span></li>
-		</ul>
+        <ul>
+            <li><span class='st_sharethis_custom' displayText='СПОДЕЛИ'><span class="icon-facebook icon-2x">&#160;</span><span class="icon-twitter icon-2x">&#160;</span><span class="icon-google-plus icon-2x">&#160;</span><span class="icon-linkedin icon-2x">&#160;</span><span class="icon-pinterest icon-2x">&#160;</span></span></li>
+        </ul>
     </xsl:template>
     <!-- Add each RSS feed from meta to a list -->
     <xsl:template name="addRSSLinks">
@@ -87,6 +83,12 @@
                     <xsl:attribute name="href">
                         <xsl:value-of select="."/>
                     </xsl:attribute>
+
+                    <!-- <xsl:attribute name="style">
+                        <xsl:text>background: url(</xsl:text>
+                        <xsl:value-of select="$context-path"/>
+                        <xsl:text>/static/icons/feed.png) no-repeat</xsl:text>
+                    </xsl:attribute> -->
 
                     <xsl:choose>
                         <xsl:when test="contains(., 'rss_1.0')">
