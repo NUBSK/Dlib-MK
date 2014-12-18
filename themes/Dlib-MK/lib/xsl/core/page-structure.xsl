@@ -287,15 +287,6 @@
                                 var runAfterJSImports = new FnArray();
             </script>
 
-            <!-- Modernizr enables HTML5 elements & feature detects -->
-<!--             <script type="text/javascript">
-                <xsl:attribute name="src">
-                    <xsl:value-of select="/dri:document/dri:meta/dri:pageMeta/dri:metadata[@element='contextPath'][not(@qualifier)]"/>
-                    <xsl:text>/themes/</xsl:text>
-                    <xsl:value-of select="/dri:document/dri:meta/dri:pageMeta/dri:metadata[@element='theme'][@qualifier='path']"/>
-                    <xsl:text>/lib/js/modernizr-1.7.min.js</xsl:text>
-                </xsl:attribute>&#160;</script> -->
-
             <!-- Add the title in -->
             <xsl:variable name="page_title" select="/dri:document/dri:meta/dri:pageMeta/dri:metadata[@element='title']" />
             <title>
@@ -362,46 +353,15 @@
                     </xsl:choose>
 
                 </h1>
-
-<!--                 <xsl:choose>
-                    <xsl:when test="/dri:document/dri:meta/dri:userMeta/@authenticated = 'yes'">
-                        <div id="ds-user-box">
-                            <p>
-                                <a>
-                                    <xsl:attribute name="href">
-                                        <xsl:value-of select="/dri:document/dri:meta/dri:userMeta/
-                                        dri:metadata[@element='identifier' and @qualifier='url']"/>
-                                    </xsl:attribute>
-                                    <i18n:text>xmlui.dri2xhtml.structural.profile</i18n:text>
-                                    <xsl:value-of select="/dri:document/dri:meta/dri:userMeta/
-                                    dri:metadata[@element='identifier' and @qualifier='firstName']"/>
-                                    <xsl:text> </xsl:text>
-                                    <xsl:value-of select="/dri:document/dri:meta/dri:userMeta/
-                                    dri:metadata[@element='identifier' and @qualifier='lastName']"/>
-                                </a>
-                                <xsl:text> | </xsl:text>
-                                <a>
-                                    <xsl:attribute name="href">
-                                        <xsl:value-of select="/dri:document/dri:meta/dri:userMeta/
-                                        dri:metadata[@element='identifier' and @qualifier='logoutURL']"/>
-                                    </xsl:attribute>
-                                    <i18n:text>xmlui.dri2xhtml.structural.logout</i18n:text>
-                                </a>
-                            </p>
-                        </div>
-                    </xsl:when>
-                    <xsl:otherwise> -->
-                        <div id="ds-user-box">
-                            <ul id="nav">
-                                <li><a href="/">Home</a></li>
-                                <li><a href="/page/about">About Us</a></li>
-                                <li><a href="/recent-submissions">Latetst Items</a></li>
-                                <li><a href="/page/faq">Help</a></li>
-                                <li><a href="/contact">Contact</a></li>
-                            </ul>
-                        </div>
-<!--                     </xsl:otherwise>
-                </xsl:choose> -->
+                <div id="ds-user-box">
+                    <ul id="nav">
+                        <li><a href="/">Home</a></li>
+                        <li><a href="/page/about">About Us</a></li>
+                        <li><a href="/recent-submissions">Latetst Items</a></li>
+                        <li><a href="/page/faq">Help</a></li>
+                        <li><a href="/contact">Contact</a></li>
+                    </ul>
+                </div>
                 
                 <xsl:call-template name="languageSelection" />
                 
