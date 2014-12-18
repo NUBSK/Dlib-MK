@@ -44,12 +44,21 @@
     <xsl:template match="dri:options">
         <div id="ds-options-wrapper">
             <div id="ds-options">
+<<<<<<< HEAD
                 <h1 id="ds-feed-option-head" class="ds-option-set-head" style="margin:15px 0 10px;">
                     <i18n:text>&#xf0a1; Споделете</i18n:text>
                 </h1>
                 <div id="ds-social-option" class="ds-option-set">
                     <xsl:call-template name="SocialLinks"/>
                 </div>
+=======
+        		<h1 id="ds-feed-option-head" class="ds-option-set-head" style="margin:15px 0 10px;">
+        			<i18n:text>&#xf0a1; Споделете</i18n:text>
+        		</h1>
+        		<div id="ds-social-option" class="ds-option-set">
+        			<xsl:call-template name="SocialLinks"/>
+        		</div>
+>>>>>>> 35d2240849aeb4d540d97965cf1be6d92f01cd58
                 <!-- Once the search box is built, the other parts of the options are added -->
                 <xsl:apply-templates/>
 
