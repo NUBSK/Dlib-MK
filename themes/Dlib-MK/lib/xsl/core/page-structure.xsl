@@ -303,6 +303,9 @@
                         <xsl:when test="starts-with($request-uri, 'page/about')">
                                 <xsl:text>About This Repository</xsl:text>
                         </xsl:when>
+                        <xsl:when test="starts-with($request-uri, 'page/faq')">
+                                <xsl:text>DSpace Help</xsl:text>
+                        </xsl:when>
                         <xsl:when test="not($page_title)">
                             <i18n:text>xmlui.dri2xhtml.METS-1.0.no-title</i18n:text>
                         </xsl:when>
@@ -390,22 +393,11 @@
                     <xsl:otherwise> -->
                         <div id="ds-user-box">
                             <ul id="nav">
-                                <li><a href="/">Дома</a></li>
-                                <li><a href="/page/about">За нас</a></li>
-                                <li><a href="/community-list">Колекции</a>
-                                    <span class="strelka">&#160;</span>
-                                    <ul>
-                                        <li><a href="/handle/68275/2">Институции</a></li>
-                                        <li><a href="/handle/68275/1531">Археографија</a></li>
-                                        <li><a href="/handle/68275/1537">Ракописи</a></li>
-                                        <li><a href="/handle/68275/1553">Списанија и весници</a></li>
-                                        <li><a href="/handle/68275/1548">Картографија</a></li>
-                                        <li><a href="/handle/68275/1541">Ликовни уметности</a></li>
-                                        <li><a href="/handle/68275/1544">Музичка уметност</a></li>
-                                        <li><a href="/handle/68275/1557">Електронска читална</a></li>
-                                    </ul></li>
-                                <li><a href="/page/kontakt">Контакт</a></li>
-                                <li><a href="/page/faq">Помош</a></li>
+                                <li><a href="/">Home</a></li>
+                                <li><a href="/page/about">About Us</a></li>
+                                <li><a href="/recent-submissions">Latetst Items</a></li>
+                                <li><a href="/page/faq">Help</a></li>
+                                <li><a href="/contact">Contact</a></li>
                             </ul>
                         </div>
 <!--                     </xsl:otherwise>
@@ -424,22 +416,10 @@
                 <ul>
                     <xsl:choose>
                         <xsl:when test="starts-with($request-uri, 'page/about')">
-                             <xsl:text>За нас</xsl:text>
+                             <xsl:text>About This Repository</xsl:text>
                         </xsl:when>
                         <xsl:when test="starts-with($request-uri, 'page/faq')">
-                             <xsl:text>Најчесто поставувани прашања</xsl:text>
-                        </xsl:when>
-                        <xsl:when test="starts-with($request-uri, 'page/pomos')">
-                             <xsl:text>Помош при пребарување</xsl:text>
-                        </xsl:when>
-                        <xsl:when test="starts-with($request-uri, 'page/kontakt')">
-                             <xsl:text>Контакт</xsl:text>
-                        </xsl:when>
-                        <xsl:when test="starts-with($request-uri, 'page/terms')">
-                             <xsl:text>Услови на користење</xsl:text>
-                        </xsl:when>
-                        <xsl:when test="starts-with($request-uri, 'page/policy')">
-                             <xsl:text>Полиса на приватност</xsl:text>
+                             <xsl:text>DSpace Help</xsl:text>
                         </xsl:when>
                         <xsl:when test="count(/dri:document/dri:meta/dri:pageMeta/dri:trail) = 0">
                             <li class="ds-trail-link first-link">-</li>
@@ -652,31 +632,7 @@
                 <div id="ds-footer-links">
                     <a href="http://www.dspace.org/" target="_blank">DSpace software</a> copyright&#160;&#169;&#160;2002-2013&#160; <a href="http://www.duraspace.org/" target="_blank">Duraspace</a>
                 </div>
-<!--                 <div id="ds-footer-right">
-                    <span class="theme-by">Theme by&#160;</span>
-                    <a title="@mire NV" target="_blank" href="http://atmire.com" id="ds-footer-logo-link">
-                    <span id="ds-footer-logo">&#160;</span>
-                    </a>
-                </div> -->
-                <div id="ds-footer-links">
-                    <a>
-                        <xsl:attribute name="href">
-                            <xsl:value-of
-                                    select="/dri:document/dri:meta/dri:pageMeta/dri:metadata[@element='contextPath'][not(@qualifier)]"/>
-                            <xsl:text>/contact</xsl:text>
-                        </xsl:attribute>
-                        <i18n:text>xmlui.dri2xhtml.structural.contact-link</i18n:text>
-                    </a>
-                    <xsl:text> | </xsl:text>
-                    <a>
-                        <xsl:attribute name="href">
-                            <xsl:value-of
-                                    select="/dri:document/dri:meta/dri:pageMeta/dri:metadata[@element='contextPath'][not(@qualifier)]"/>
-                            <xsl:text>/feedback</xsl:text>
-                        </xsl:attribute>
-                        <i18n:text>xmlui.dri2xhtml.structural.feedback-link</i18n:text>
-                    </a>
-                </div>
+
                 <!--Invisible link to HTML sitemap (for search engines) -->
                 <a class="hidden">
                     <xsl:attribute name="href">
@@ -694,9 +650,6 @@
 <!--
         The meta, body, options elements; the three top-level elements in the schema
 -->
-
-
-
 
     <!--
         The template to handle the dri:body element. It simply creates the ds-body div and applies
@@ -716,144 +669,290 @@
             <xsl:choose>
                 <xsl:when test="starts-with($request-uri, 'page/about')">
                     <div>
-                        <h1>За нас</h1>
-                        <img src="/static/icons/dlib.jpg" alt="Компјутер со книги" title="Компјутер со книги" width="798" height="300" />
-                        <p>Дигиталната библиотека при <a href="http://nubsk.edu.mk" alt="НУ-НУБ „Св. Климент Охридски“ - Скопје" target="_blank" title="НУ-НУБ „Св. Климент Охридски“ - Скопје">НУ-НУБ „Св. Климент Охридски“ - Скопје</a> преку својот портал Dlib.mk, на своите посетители им овозможува пристап до различни библиографски содржини како што се книги, ракописи, списанија и периодични публикации, статии, географски карти, ноти, научни извештаи, проекти итн.</p>
-                        <p>Порталот <a href="/" alt="Дигитална библиотека на Македонија" title="Дигитална библиотека на Македонија">Dlib.mk</a>, пред сè, има за задача да зачува, презентира и дистрибуира најразлични библиографски содржини во дигитална форма како дел од програмата за заштита на културното наследство и промовирање на нашата култура во јавноста.</p>
-                        <p>Од ноември 2013 година, врз основа на партнерски договор за соработка, Dlib.mk прерасна во Дигитална библиотека на Македонија. Со овој чекор се овозможи, во процесот на дигитализација, со минимална инвестиција да се вклучат и други институции во процесот на дигитаализација. НУ НУБ „Св. Климент Охридски“ - Скопје, ја презема обрската за дигитализација на редок библиотечен материјал, хостирање и одржување на содржините, како и изработка на метаподатоци. На тој начин, <a href="/handle/68275/2" title="Институции во Dlib.mk">институциите членки во Dlib.mk</a> имаат можност, на пошироката јавност, да ги претстават сите материјали од своите збирки што се од особено значење за културата, уметноста и науката. Во исто време, институциите значително ги намалуваат своите трошоци за инфрастуктура и човечки ресурси.</p>
-                        <p>За повеќе информации како да станете член во Dlib.mk, посетете ја страницата за <a href="/page/faq" title="Најчесто поставувани прашања">Најчесто поставувани прашања</a> или преку страницата за <a href="/page/kontakt" title="Контакт">Контакт</a>.</p>
-                        <h3>Контакт информации:</h3>
-                        <ul>
-                            <li><strong>Одговорно лице:</strong> Александар Стојанов</li>
-                            <li><strong>Адреса:</strong> Бул. „Гоце Делчев“, бр. 6</li>
-                            <li><strong>Телефон:</strong> +389 (0)2 3230 151 лок. 205</li>
-                        </ul>
+                        <h1>About This Repository</h1>
+                        <xsl:element name="iframe">
+                            <xsl:attribute name="class">cf</xsl:attribute>  
+                            <xsl:attribute name="width">798</xsl:attribute>
+                            <xsl:attribute name="height">449</xsl:attribute>
+                            <xsl:attribute name="src">http://www.youtube.com/embed/SvLlyXrF6kY</xsl:attribute>
+                            <xsl:attribute name="frameborder">0</xsl:attribute>
+                            <xsl:comment/><!-- avoid empty tag value that breaks the html-->
+                        </xsl:element>
+                        <p>To add your own content to this page, edit webapps/xmlui/themes/Mirage2/lib/xsl/core/page-structure.xsl and add your own content to the title, trail, and body. If you wish to add additional pages, you will need to create an additional xsl:when block and match the request-uri to whatever page you are adding. Currently, static pages created through altering XSL are only available under the URI prefix of page/.</p>
                     </div>
                 </xsl:when>
 
                 <xsl:when test="starts-with($request-uri, 'page/faq')">
-                    <h1>Најчесто поставувани прашања</h1>
+                    <h1>DSpace Help</h1>
+                    <p>DSpace captures, distributes and preserves digital research products. Here you can find articles, working papers, preprints, technical reports, conference papers and data sets in various digital formats. Content grows daily as new communities and collections are added to DSpace.</p>
+                    <p>The DSpace content is organized around Communities which can correspond to administrative entities such as schools, departments, labs and research centers. Within each community there can be an unlimited number subcommunities and an unlimited number of collections. Each collection may contain an unlimited number of items.</p>
                     <div id="accordion">
-                        <h2>Прегледај</h2>
+                        <h2>BROWSE</h2>
                         <div>
-                            <p>Опцијата „Прегледај“ која се наоѓа во сивото поле од десната страна, ви овозможува преглед според следниве критериуми:</p>
+                            <p><strong>Browse</strong> allows you to go through a list of items in some specified order:</p>
+                            <p><strong>Browse by Community/Collection</strong> takes you through the communities in alphabetical 
+                            order and allows you to see the subcommunities and collections within each community.</p>
+                            <p><strong>Browse by Title</strong> allows you to move through an alphabetical list of all titles of items in DSpace.</p>
+                            <p><strong>Browse by Author</strong> allows you to move through an alphabetical list of all authors of items in DSpace.</p>
+                            <p><strong>Browse by Subject </strong>allows you to move through an alphabetical list of subjects assigned to items in DSpace.</p>
+                            <p><strong>Browse by Date </strong>allows you to move through a list of all items in DSpace in reverse chronological order.</p>
+                            <p><strong>You may sign on to the system if you:</strong> </p>
                             <ul>
-                                <li><strong>Прелистај според колекции и збрики:</strong> Ве води низ сите колекции по алфанумерички редослед и ви овозможува да ги погледнете потколекциите и збирките во секоја колекција.</li>
-                                <li><strong>Преглед по дата на издавање:</strong> Ве води низ листа од записи во Dlib.mk по опаѓачки хронолошки редослед.</li>
-                                <li><strong>Преглед по автор:</strong> Ве води низ алфанумеричка листа на сите автори на книги Dlib.mk.</li>
-                                <li><strong>Преглед по наслов:</strong> Ве води низ алфанумеричка листа од наслови на сите записи во Dlib.mk.</li>
-                                <li><strong>Преглед по клучен збор:</strong> Ве води низ алфанумеричка листа од теми (предметни определници) што се однесуваат на записи во Dlib.mk.</li>
+                                <li>wish to subscribe to a collection and receive e-mail updates when new items are added</li>
+                                <li>wish to go to the "My DSpace" page that tracks your subscriptions and other interactions with DSpace requiring authorization (if you are a submitter for a collection, for instance.)</li>
+                              <li>wish to edit your profile</li>
                             </ul>
+                            <p><strong>Submit</strong> is the DSpace unction that enables users to add an item to DSpace. The process of submission 
+                              includes filling out information about the item on a metadata form and uploading the file(s) comprising the digital item. Each community sets its own submission policy.</p>
+                            <p><strong>My DSpace</strong> is a personalpage that is maintained for each member. This page can contain a list of items that are in the submission process for a particular member, or a task list of items that need attention such as editing, reviewing, or checking. In the future this page will also maintain information about personal services offered by DSpace, such as e-mail notification when new items are added to a collection.</p>
+                            <p><strong>Edit Profile</strong> allows you to change your password.</p>
+                            <p><strong>About</strong> takes you to information about the DSpace project and its development.</p>
                         </div>
-                        <h2>Пребарување</h2>
+                        <h2>SEARCH</h2>
                         <div>
-                            <p>За да пребарувате во целиот Dlib.mk, користете го полето за пребарување кое се наоѓа во горниот десен агол. </p>
+                            <p>To search all of DSpace, use the yellow search box at the top of the navigation bar on the left (or the search box in the middle of the home page)</p>
+                            <p style="text-align:center"> <img src="/static/icons/searchtop.gif" alt="Search Box" width="119" height="53" /></p>
+                            <p> To limit your search to a specific community or collection, navigate to that community or collection and use the search bar on that page.</p>
+                            <p style="text-align:center"> <img src="/static/icons/searchother.gif" alt="Search Box" width="253" height="69" /></p>
+                            <p>DSpace uses the<strong> Jakarta Lucene </strong>search engine. Here are some search hints:</p>
+                            <h3>What is searched in the general keyword search (yellow box)</h3>
+                            <p>The word(s) you enter in the search box will be searched against the title, author, subject abstract, series, sponsor and identifier fields of each item's record.</p>
+                            <p>If your site is enabled for full-text searching, the text you entered will also be searched against the full text of all archived documents. For more information on full-text searching please contact your DSpace Administrator.</p>
+                            <h3>What is not searched - Stop Words</h3>
+                            <p>The search engine ignores certain words that occur frequently in English, but do not add value to the search. These are:</p>
+                            <p style="text-align:center"> "a", "and", "are", "as", "at", "be", "but", "by" , "for", "if", "in", "into",</p>
+                            <p style="text-align:center">"is", "it", "no", "not", "of", "on", "or", "such", "the", "to", "was"</p>
+                            <h3>Truncation</h3>
+                            <p>Use an asterisk (*) after a word stem to get all hits having words starting with that root, for example: </p>
+                            <p><img src="/static/icons/search1.gif" alt="" width="75" height="27" />  will retrieve selects, selector, selectman, selecting.</p>
+                            <h3>Stemming</h3>
+                            <p>The search engine automatically expands words with common endings to includeplurals, past tenses ...etc.</p>
+                            <h3>Phrase Searching</h3>
+                            <p>To search using multiple words as a phrase, put quotation marks (") around the phrase.</p>
+                            <p><img src="/static/icons/search8.jpg" alt=""  width="196" height="28" /></p>
+                            <h3>Exact word match</h3>
+                            <p>Put a plus (+) sign before a word if it MUST appear in the search result. For instance, in the following search the word "training" is optional, but the word "dog" must be in the result.</p>
+                            <p><img src="/static/icons/search2.gif" alt=""  width="123" height="27" /></p>
+                            <h3>Eliminate items with unwanted words</h3>
+                            <p>Put a minus (-) sign before a word if it should not appear in the search results.Alternatively, you can use <strong>NOT</strong>. This can limit your search to eliminate unwanted hits. For instance, in the search</p>
+                            <p><img src="/static/icons/search3.jpg" alt="" width="124" height="28" />    <img src="/static/icons/search4.jpg" alt="" width="136" height="28" /></p>
+                            <p>you will get items containing the word "training", except those that also contain the word "cat".</p>
+                            <h3>Boolean searching</h3>
+                            <p>The following Boolean operators can be used to combine terms. Note that they must be CAPITALIZED!</p>
+                            <p><strong>AND</strong> - to limit searches to find items containing all words or phrases combined with this operator, e.g.</p>
+                            <p><img src="/static/icons/search5.jpg" alt="" width="124" height="28" /> will retrieve all items that contain BOTH the words "cats" and "dogs".</p>
+                            <p><strong>OR</strong> - to enlarge searches to find items containing any of the words or phrases surrounding this operator</p>
+                            <p><img src="/static/icons/search6.jpg" alt="" width="124" height="28" /> will retrieve all items that contain EITHER the words "cats" or "dogs".</p>
+                            <p><strong>NOT - </strong>to exclude items containing the word following this operator, e.g.</p>
+                            <p><img src="/static/icons/search4.jpg" alt="" width="136" height="28" />will retrieve all items that contain the word "training" EXCEPT those also containing the word "cat".</p>
+                            <p>Parentheses can be used in the search query to group search terms into sets, and operators can then be applied to the whole set, e.g.</p>
+                            <p><img src="/static/icons/search7.jpg" alt="" width="340" height="28" /></p>
                         </div>
-                        <h2>Напредно пребарување</h2>
+                        <h2>ADVANCED SEARCH</h2>
                         <div>
-                            <p>FAQ</p>
+                            <p>The advanced search page allows you to specify the fields you wish to search, and to combine these searches with the Boolean "and", "or" or "not".</p>
+                            <p>You can restrict your search to a community by clicking on the arrow to the right of the top box. If you want your search to encompass all of DSpace, leave that box in the default position.</p>
+                            <p>Then select the field to search in the left hand column and enter the word or phrase you are searching in the right hand column. You can select the Boolean operator to combine searches by clicking on the arrow to the right of the "AND" box.</p>
                         </div>
-                        <h2>Регистрација</h2>
+                        <h2>SUBJECT CATEGORY SEARCH</h2>
                         <div>
-                            <p>FAQ</p>
+                            <p>A controlled vocabulary is a set of terms which form a dictionary of descriptions of particular types of content or subject matter. These are maintained by standards bodies in order to standardise the way that similar materials are categorised in archives.  This aids searching by increasing the likelihood that the relevant materials will be returned by the user's search.</p>
+                            <p>Filtering the category list will remove from the list any terms which do not match the filter.  The remaining terms are any category or sub category which contains the filter term anywhere in the heirarchy.  Expanding each category will show you which terms (or sub terms) did match the filter.</p>
+                            <p>To search the archive items by the subject category, check as many boxes next to the categories as necessary, before clicking "Search...". The search will return all items that either match the categories selected exactly, or which are categorised underneath a higher level category.  Clicking on the "+" next to the category will expand the tree to show you what refinements are available for your selected category.</p>
                         </div>
-                        <h2>Кориснички профил</h2>
+                        <h2>COMMUNITIES</h2>
                         <div>
-                            <p>FAQ</p>
-                        </div>
-                        <h2>Известувања и претплати</h2>
-                        <div>
-                            <p>Опцијата за електронски претплати е достапна само на регистрирани корисници. Корисниците можат да се претплатат за да добиваат известувања по е-пошта за нови записи што се додадени во збирки. Бројот на збирки на кои може да се претплатат корисниците е неограничен. За да се претплатите:</p>
+                            <p>The DSpace content is organized around Communities which can correspond to administrative entities such as schools,  departments, labs and research centers. Within each community there can be an unlimited number subcommunities and an unlimited number of collections. Each collection may contain an unlimited number of items. This organization gives DSpace the flexibility to accommodate differing needs of communities by allowing them to</p>
                             <ul>
-                                <li>следете го линкот за најава во Dlib.mk</li>
-                                <li>одете до страната за уредување на вашиот профил</li>
-                                <li>во делот обележан како <strong>Електронски претплати</strong>, изберете од листата на збирки во паѓачкото мени и притиснете на копчето <strong>додај</strong>.</li>
+                                <li>Decide on policies such as:<br /> - - who contributes content<br /> - - whether there will be a review process<br /> - - who will have access</li>
+                                <li> Determine workflow - reviewing, editing, metadata</li>
+                                <li>Manage collections</li>
                             </ul>
-                            <p>За сите корисници кои не се членови во Dlib.mk, а сакаат да добиваат електронски известувања, тоа може да го сторат преку опцијата за RSS. Во синото поле од десна страна, на почетната страна на Dlib.mk се појавува опцијата за RSS и тоа во три формати: RSS 1.0, RSS 2.0 и Atom. Доколку сакате да ги ограничите претплатите, тоа може да го направите преку почетните страници на која било колекција или збирка.</p>
+                            <p>Each community has its own entry page displaying information, news and links reflecting the interests of that community, as well as a descriptive list of collections within the community.</p>
                         </div>
-                        <h2>Колекции и збирки</h2>
+                        <h2>COLLECTIONS</h2>
                         <div>
-                            <p>Колекциите може да содржат неограничен број потколекции и збирки во Dlib.mk. Колекциите може да бидат организирани по тема или по тип на информација (како работни документи или сет од информации) или по кој било друг начин на сортирање, што збирката го избрала корисен за организација на нејзините записи. Колекциите имаат различни полиси и работни процедури.</p>
-                            <p>Секоја колекција и збирка во Dlib.mk има своја почетна страница која прикажува информации, новости, линкови и лиценца под која нејзините записи се достапни за јавноста.</p>
-                            <p>Матичната колекција за секој запис е според институцијата - сопственик на материјалот. Потоа, записите се мапираат(означуваат) во останатите колекции според содржина. Единствен исклучoк на ова правило е колекцијата <strong>Електронска читална</strong>, која поради Законот за авторски права и интелектуална сопственост на Република Македонија, е достапна исклучиво на регистрирани корисници во просториите на НУ НУБ „Св. Климент Охридски“ - Скопје.</p>
+                            <p>Communities can maintain an unlimited number of collections in DSpace. Collections can be organized around a topic, or by type of information (such as working papers or datasets) or by any other sorting method a community finds useful in organizing its digital items. Collections can have different policies and workflows.</p>
+                            <p>Each DSpace collection has its own entry page displaying information, news and links reflecting the interests of users of that collection.</p>
                         </div>
-                        <h2>Членство во DLIB.MK</h2>
+                        <h2>SIGN ON TO DSPACE</h2>
                         <div>
-                            <p>FAQ</p>
+                            <p>When you access an area of DSpace that requires authorization, the system will require you to log in. All users can register to become subscribers. Some restricted functions, such as content submission, require authorization from the community.</p>
+                            <p>Before you log in for the first time, you will need to click on "register with DSpace" and follow the instructions. After that, you will need to enter your e-mail address and password in the log-in form that appears. Your e-mail address should include your username and domain name. It is not case sensitive.</p>
+                            <p style="text-align:center">Example: moniker@mycorp.com</p>
+                            <p>Type your password exactly as you entered it originally. It is case sensitive. Be sure to click on the "log in" button to continue.</p>
                         </div>
-                        <h2>Харвестирање</h2>
+                        <h2>SUBMIT</h2>
                         <div>
-                            <p>FAQ</p>
+                            <p>Stopping during the Submission Process:</p>
+                            <p>At any point in the submission process you can stop and save your work for a later date by clicking on the "cancel/save" button at the bottom of the page. The data you have already entered will be stored until you come back to the submission, and you will be reminded on your "My DSpace" page that you have a submission in process. If somehow you accidentally exit from the submit process, you can always resume from your "My DSpace" page. You can also cancel your submission at any point.</p>
+                            <h3>Choose Collection</h3>
+                            <p>Progress Bar - Oval Buttons at Top of Page:</p>
+                            <p>At the top of the submit pages you will find 7 oval buttons representing each step in the submission process. As you move through the process these ovals will change color. Once you have started you can also use these buttons to move back and forth within the submission process by clicking on them. You will not lose data by moving back and forth.</p>
+                            <p><img src="/static/icons/progressbar.gif" alt="Progress Bar" width="698" height="39" /></p>
+                            <p>Select Collection:</p>
+                            <h3>Click on the arrow at the right of the drop-down box to see a list of Collections. Move your mouse to the collection into which you wish to add your item and click.</h3>
+                            <p>(If you are denied permission to submit to the collection you choose, please contact your DSpace Administrator for more information.)</p>
+                            <p>You must be authorized by a community to submit items to a collection. If you would like to submit an item to DSpace, but don't see an appropriate community, please contact your DSpace Administrator to find out how you can get your community set up in DSpace.</p>
+                            <p>Click on the "next" button to proceed, or "cancel/save" button to stop and save or cancel your submission.</p>
                         </div>
-                        <h2>Платформа DSpace</h2>
+                        <h2>SUBMIT: Describe Your Item - Page 1</h2>
                         <div>
-                            <p>Платформа DSpace</p>
+                            <p>If you respond "yes" to any of the questions on this page, you will be presented with a modified input form tailored to capture extra information. Otherwise you will get the "regular" input form.</p>
+                            <ul>
+                                <li>* More than one title - Sometimes an item has more than one title, perhaps an abbreviation, acronym, or a title in another language. If this is the case, and you want this information captured, click in the "yes" box.</li>
+                                <li>* Previously issued - New items that have NOT been previously published or distributed will be assigned an issue date by the system upon DSpace distribution. If you are entering older items that have already been distributed or published, click in the "yes" box. You will receive a form prompting you for several pieces of information relating to publication.</li>
+                                <li>* Multiple files - An item can consist of more than one file in DSpace. A common example of this would be an HTML file with references to image files (such as JPG or GIF files). Another example of this would be an article supplemented with a video simulation and a data file. If you are submitting more than one file for this item, click in the "yes" box.</li>
+                            </ul>
+                            <p>Click on the "next" button to proceed, or "cancel/save" button to stop and save or cancel your submission.</p>
                         </div>
-                        <h2>Корисни линкови</h2>
+                        <h2>SUBMIT: Describe Your Item - Page 2</h2>
                         <div>
-                            <p>Платформа DSpace</p>
+                            <p>The information you fill in on these two screens will form the metadata record that will enable users to retrieve your item using search engines. The richer the metadata, the more "findable" your item will be, so please take the time to fill in as many fields as are applicable to your item.</p>
+                            <h3>Author:</h3>
+                            <p>This can be a person, organization or service responsible for creating or contributing to the content of the item. By clicking on the "Add More" button you can add as many authors as needed.   Examples:</p>
+                            <p style="text-align:center"><img src="/static/icons/author.gif" alt="Author submit" width="584" height="71" /></p>
+                            <p style="text-align:center">If the author is an organization, use the last name input box for the organization name:</p>
+                            <p style="text-align:center"><img src="/static/icons/corpauthor.gif" alt="author submit" width="575" height="66" /></p>
+                            <h3>Title:</h3>
+                            <p>Enter the full and proper name by which this item should be known. All DSpace items must have a title!</p>
+                            <p style="text-align:center"><img src="/static/icons/finalTitle1.jpg" alt="title submit" width="392" height="62" /></p>
+                            <h3>Other Title:</h3>
+                            <p>(note - this input box appears only if you indicated on the first page that the item has more than one title.) If your item has a valid alternative title, for instance, a title in another language or an abbreviation, then enter it here. Example:</p>
+                            <p style="text-align:center"><img src="/static/icons/othertitle.gif" alt="Other title" width="612" height="62" /></p>
+                            <h3>Date of Issue:</h3>
+                            <p>(note - this input box appears only if you indicated on the first page that the item has been previously published or distributed. If DSpace is the first means of distribution of this item, a date will be assigned by the system when the item becomes a part of the repository.)</p>
+                            <p>If your item was previously published or made public, enter the date of that event here. If you don't know the month, leave the default "no month"; otherwise select a month from the drop-down box. If you don't know the exact day, leave that box empty.</p>
+                            <p style="text-align:center"><img src="/static/icons/date.gif" alt="date of issue" width="471" height="53" /></p>
+                            <h3>Publisher:</h3>
+                            <p>(note - this input box appears only if you indicated on the first page that the item has been previously published or distributed.)</p>
+                            <p>Enter the name of the publisher of this item.</p>
+                            <p style="text-align:center"><img src="/static/icons/date.gif" alt="date of issue" width="471" height="53" /></p>
+                            <h3>Citation:</h3>
+                            <p>(note - this input box appears only if you indicated on the first page that the item has been previously published or distributed.)</p>
+                            <p>Enter citation information for this item if it was a journal article or part of a larger work, such as a book chapter. For journal articles, include the journal title, volume number, date and paging. For book chapters, include the book title, place of publication, publisher name, date and paging.</p>
+                            <h3>Series/Report No.:</h3>
+                            <p>Some of the collections in DSpace are numbered series such as technical reports or working papers. If this collection falls into that category, then there should be a default value in the Series Name box which you should not change, but you will have to fill in the assigned number in the Report or Paper No. input box.  Examples:</p>
+                            <p style="text-align:center"><img src="/static/icons/Series.gif" alt="Series" width="633" height="67" /></p>
+                            <h3>Identifiers:</h3>
+                            <p>If you know of a unique number or code that identifies this item in some system, please enter it here. Click on the arrow to the right of the input box, and select from one of the choices in the drop down menu. The choices refer to:
+                                <ul>
+                                    <li>Govt.doc # - Government Document Number - e.g. NASA SP 8084</li>
+                                    <li>ISBN - International Standard Book Number - e.g. 0-1234-5678-9</li>
+                                    <li>ISSN - International Standard Serial Number - e.g. 1234-5678</li>
+                                    <li>ISMN - International Standard Music Number - e.g. M-53001-001-3</li>
+                                    <li>URI - Universal Resource Identifier - e.g.. http://www.dspace.org/help/submit.html</li>
+                                    <li>Other - An unique identifier assigned to the item using a system other than the above</li>
+                                </ul>
+                            </p>
+                            <h3>Type:</h3>
+                            <p>Select the type of work (or genre) that best fits your item. To select more than one value in the list, you may have to hold down the "ctrl" or "shift" key.</p>
+                            <h3>Language:</h3>
+                            <p>Select the language of the intellectual content of your item. If the default (English - United States) is not appropriate, click on the arrow on the right of the drop down box to see a list of languages commonly used for publications, e.g.</p>
+                            <p style="text-align:center"><img src="/static/icons/finalLanguage1.jpg" alt="language" width="284" height="40" /></p>
+                            <p>If your item is not a text document and language is not applicable as description, then select the N/A choice.</p>
+                            <p>Click on the "next" button to proceed, or "cancel/save" button to stop and save or cancel your submission.</p>
+                        </div>
+                        <h2>SUBMIT: Describe Your Item - Page 3</h2>
+                        <div>
+                            <h3>Subject/Keywords:</h3>
+                            <p>Please enter as many subject keywords as are appropriate to describe this item, from the general to the specific. The more words you provide, the more likely it is that users will find this item in their searches. Use one input box for each subject word or phrase. You can get more input boxes by clicking on the "add more" button. Examples:</p>
+                            <p style="text-align:center"><img src="/static/icons/keywords.gif" alt="keywords" width="533" height="100" /></p>
+                            <p>Your community may suggest the use of a specific vocabulary, taxonomy, or thesaurus. If this is the case, please select your subject words from that list. Future versions of DSpace will provide links to those lists.</p>
+                            <h3>Abstract:</h3>
+                            <p>You can either cut and paste an abstract into this box, or you can type in the abstract. There is no limit to the length of the abstract. We urge you to include an abstract for the convenience of end-users and to enhance search and retrieval capabilities.</p>
+                            <h3>Sponsors:</h3>
+                            <p>If your item is the product of sponsored research, you can provide information about the sponsor(s) here. This is a freeform field where you can enter any note you like. Example:</p>
+                            <p style="text-align:center"><img src="sponsor.gif" alt="sponsor" width="542" height="110" /></p>
+                            <h3>Description:</h3>
+                            <p>Here you can enter any other information describing the item you are submitting or comments that may be of interest to users of the item.</p>
+                            <p>Click on the "next" button to proceed, or "cancel/save" button to stop and save or cancel your submission.</p>
+                        </div>
+                        <h2>SUBMIT: Controlled Vocabulary</h2>
+                        <div>
+                            <p>A controlled vocabulary is a set of terms which form a dictionary of descriptions of particular types of content or subject matter. These are maintained by standards bodies in order to standardise the way that similar materials are categorised in archives.</p>
+                            <p>Accurately categorising material using a controlled vocabulary increases the likelihood that relevant results will be returned to users when searching individual or multiple archives.</p>
+                            <p>To enter a controlled vocabulary term in the form, select "Subject Categories" from underneath the input field. This will open a window containing the available vocabularies. You may filter the vocabulary lists as described above in order to find the terms most relevant to your submission. Once you have found the term that you wish to enter, simply click on it, and it will be automatically entered into the submission form and the popup window will close. You may add as many subject category terms as you like into the form. Use "Add More" on the right to generate more input boxes.</p>
+                            <p>Filtering the category list will remove from the list any terms which do not match the filter. The remaining terms are any category or sub category which contains the filter term anywhere in the heirarchy. Expanding each category will show you which terms (or sub terms) did match the filter.</p>
+                        </div>
+                        <h2>SUBMIT: Upload a File</h2>
+                        <div>
+                            <p>There are two methods of entering the name of the file you wish to upload:</p>
+                            <ol>
+                                <li>Type the full path and file name into the input box and then click on the "next" button in the lower right hand corner of the screen.</li>
+                                <li>Click on the "browse" button and a window showing your files will appear. You can navigate through your directories and folders until you find the correct file to upload. Double-click on the file name you wish to upload, and the name will be entered into the input box.</li>
+                            </ol>
+                            <p>Once the correct file name is in the input box, click on the "next" button to proceed.</p>
+                            <h3>File Description</h3>
+                            <p>If you specified at the beginning of the submit process that you had more than one file to upload for this item, you will see an input box marked "File Description". The information you provide here will help users to understand what information is in each file, for instance, "main article" or "images" or "computer program" or "data set". Enter file descriptions for each item, and click on the "next" button to proceed.</p>
+                        </div>
+                        <h2>SUBMIT: File Formats</h2>
+                        <div>
+                            <p>To properly archive and give access to a file, we need to know what format it is, for example "PDF", "HTML", or "Microsoft Word". If the system does not automatically recognize the format of the file you have uploaded, you will be asked to describe it. If the format of the file appears in the list offered, click on it and then on "Submit". If you can't see the format in the list, click on "format not in list" and describe the format in the text box lower down on the page. Be sure to give the name of the application you used to create the file and the version of that application, for example "Autodesk AutoCAD R20 for UNIX".</p>
+                            <h3>Uploaded File</h3>
+                            <p>After you have uploaded a file, check the information in the table to make sure it is correct. There are two further ways to verify that your files have been uploaded correctly:
+                                <ul>
+                                    <li>Click on the filename. This will download the file in a new browser window, so that you can check the contents.</li>
+                                    <li>Compare the file checksum displayed here with the checksum you calculate.</li>
+                                </ul>
+                            </p>
+                            <p><strong>If you're only uploading one file</strong>, click on "Next" when you're happy that the file has been uploaded correctly.</p>
+                            <p><strong>If you're uploading more than one file</strong>, click on the "Add Another File" button (this will appear if you checked "The item consists of more than one file" on the "Submit: Describe Your Item" page). When you are satisfied that all files for this item have been successfully uploaded, click on the "Next" button.</p>
+                            <p><strong>If you're uploading an HTML page with embedded files</strong>, click on the "Add Another File" button, and upload all files or bitstreams referenced in the html page. After all the are uploaded, in the column marked "Primary Bitstream", select the bitstream or file that is the index page or the top page for the web page. This will ensure that all of your embedded files will display properly on the HTML page. Then click on the "Next" button.</p>
+                            <h3>Checksums</h3>
+                            <p>DSpace generates an MD5 checksum for every file it stores; we use this checksum internally to verify the integrity of files over time (a file's checksum shouldn't change). You can use this checksum to be sure what we've received is indeed the file you've uploaded.</p>
+                            <p>If you wish to verify the file using checksums, click "Show checksums" on the "Uploaded File" page. The DSpace-generated MD5 checksum for every file we've received from you will show to the right of the filename. You will then need to use a local program to generate your own checksum for these files, and verify that your results match ours. On most UNIX-like systems (including Mac OS X), use md5sum. For instance, type "md5sum MYFILE" for every file you want to check; the summary should print on your screen. For Windows machines, MD5 tools are freely available: try md5 (from <a href="http://www.fourmilab.ch/md5/" target="_blank">http://www.fourmilab.ch/md5/</a>), or md5sum, available via the textutils package in Cygwin (<a href="http://www.cygwin.com/" target="_blank">http://www.cygwin.com/</a>). All of these utilities will need to be run from a command-line, or terminal, window. The entire digest printed out when you run the md5 tool on your local copy of the file you're uploading should be exactly equal to what DSpace reports.</p>
+                        </div>
+                        <h2>SUBMIT: Verify Submission</h2>
+                        <div>
+                            <p>This page lets you review the information you have entered to describe the item. To correct or edit information, click on the corresponding button on the right, or use the oval buttons in the progress bar at the top of the page to move around the submission pages. When you are satisfied that the submission is in order, click on the "Next" button to continue.</p>
+                            <p>Click on the "Cancel/Save" button to stop and save your data, or to cancel your submission.</p>
+                        </div>
+                        <h2>SUBMIT: License</h2>
+                        <div>
+                            <p>DSpace requires agreement to this non-exclusive distribution license before your item can appear on DSpace. Please read the license carefully. If you have any questions, please contact your DSpace Administrator.</p>
+                        </div>
+                        <h2>SUBMIT: Submission Complete</h2>
+                        <div>
+                            <p>Now that your submission has been successfully entered into the DSpace system, it will go through the workflow process designated for the collection to which you are submitting. Some collections require the submission to go through editing or review steps, while others may immediately accept the submission. You will receive e-mail notification as soon as your item has become a part of the collection, or if for some reason there is a problem with your submission. If you have questions about the workflow procedures for a particular collection, please contact the community responsible for the collection directly. You can check on the status of your submission by going to the My DSpace page.</p>
+                        </div>
+                        <h2>HANDLES</h2>
+                        <div>
+                            <p>When your item becomes a part of the DSpace repository it is assigned a persistent URL. This means that, unlike most URLs, this identifier will not have to be changed when the system migrates to new hardware, or when changes are made to the system. DSpace is committed to maintaining the integrity of this identifier so that you can safely use it to refer to your item when citing it in publications or other communications. Our persistent urls are registered with the <a href="http://www.handle.net/" target="_blank">Handle System</a>, a comprehensive system for assigning, managing, and resolving persistent identifiers, known as "handles," for digital objects and other resources on the Internet. The Handle System is administered by the <a href="http://www.cnri.reston.va.us/" target="_blank">Corporation for National Research Initiatives (CNRI)</a>, which undertakes, fosters, and promotes research in the public interest.</p>
+                        </div>
+                        <h2>MY DSPACE</h2>
+                        <div>
+                            <p>If you are an authorized DSpace submitter or supervisor, or if you are a staff member responsible for DSpace collection or metadata maintenance, you will have a My DSpace page. Here you will find:
+                                <ul>
+                                    <li>a list of your in-progress submissions - from this list you can resume the submission process where you left off, or you can remove the submission and cancel the item.</li>
+                                    <li>a list of the submissions which you are supervising or collaborating on</li>
+                                    <li>a list of submissions that are awaiting your action (if you have a collection workflow role).</li>
+                                    <li>a link to a list of items that you have submitted and that have already been accepted into DSpace.</li>
+                                </ul>
+                            </p>
+                        </div>
+                        <h2>EDIT PROFILE</h2>
+                        <div>
+                            <p>This page allows you to change the information we have for you. You must be authenticated with your log-in to change any of your personal information.</p>
+                        </div>
+                        <h2>SUBSCRIBE TO E-MAIL ALERTS</h2>
+                        <div>
+                            <p>Users can subscribe to receive daily e-mail alerts of new items added to collections. Users may subscribe to as many collections as they wish. To subscribe:
+                                <ul>
+                                    <li>go to the DSpace registration page by clicking on the sign-on link in the navigation bar on the left of the home page</li>
+                                    <li>fill out the registration form</li>
+                                    <li>navigate to a collection for which you would like to receive e-mail alerts, and click on the "subscribe" button (repeat for other collections)</li>
+                                    <li>navigate to a collection for which you would like to receive e-mail alerts, and click on the "subscribe" button (repeat for other collections)</li>
+                                </ul>
+                            </p>
+                        </div>
+                        <h2>FOR FURTHER ASSISTANCE...</h2>
+                        <div>
+                            <p>For help with using DSpace and questions about your specific site, please contact your DSpace Administrator.</p>
+                            <p>For general information and news about DSpace, visit the <a href="http://www.dspace.org/" traget="_blank">DSpace Website</a>.</p>
                         </div>
                     </div>
 
-                </xsl:when>
-                <xsl:when test="starts-with($request-uri, 'page/kontakt')">
-                    <div>
-                        <h1>Контакт</h1>
-                        <xsl:element name="iframe">
-                            <xsl:attribute name="class">cf</xsl:attribute>  
-                            <xsl:attribute name="width">798</xsl:attribute>
-                            <xsl:attribute name="height">800</xsl:attribute>
-                            <xsl:attribute name="src">http://nubsk.edu.mk/index.php?format=html&amp;tmpl=component&amp;option=com_breezingforms&amp;ff_form=1&amp;ff_page=1</xsl:attribute>
-                            <xsl:attribute name="frameborder">0</xsl:attribute>
-                            <xsl:comment/><!-- avoid empty tag value that breaks the html-->
-                        </xsl:element>
-                    </div>
-                </xsl:when>
-                <xsl:when test="starts-with($request-uri, 'page/terms')">
-                    <div>
-                        <h1>Услови на користење</h1>
-                        <h3>Дигиталната библиотека при</h3>
-                        <p>преку својот портал Dlib.mk, на своите посетители им овозможува пристап до различни библиографски содржини како што се книги, ракописи, списанија и периодични публикации, статии, географски карти, ноти, научни извештаи, проекти и тн.</p>
-                        <h3>Дигиталната библиотека при</h3>
-                        <p>преку својот портал Dlib.mk, на своите посетители им овозможува пристап до различни библиографски содржини како што се книги, ракописи, списанија и периодични публикации, статии, географски карти, ноти, научни извештаи, проекти и тн.</p>
-                        <h3>Дигиталната библиотека при</h3>
-                        <p>преку својот портал Dlib.mk, на своите посетители им овозможува пристап до различни библиографски содржини како што се книги, ракописи, списанија и периодични публикации, статии, географски карти, ноти, научни извештаи, проекти и тн.</p>
-                        <h3>Дигиталната библиотека при</h3>
-                        <p>преку својот портал Dlib.mk, на своите посетители им овозможува пристап до различни библиографски содржини како што се книги, ракописи, списанија и периодични публикации, статии, географски карти, ноти, научни извештаи, проекти и тн.</p>
-                        <h3>Дигиталната библиотека при</h3>
-                        <p>преку својот портал Dlib.mk, на своите посетители им овозможува пристап до различни библиографски содржини како што се книги, ракописи, списанија и периодични публикации, статии, географски карти, ноти, научни извештаи, проекти и тн.</p>
-                        <h3>Дигиталната библиотека при</h3>
-                        <p>преку својот портал Dlib.mk, на своите посетители им овозможува пристап до различни библиографски содржини како што се книги, ракописи, списанија и периодични публикации, статии, географски карти, ноти, научни извештаи, проекти и тн.</p>
-                        <h3>Дигиталната библиотека при</h3>
-                        <p>преку својот портал Dlib.mk, на своите посетители им овозможува пристап до различни библиографски содржини како што се книги, ракописи, списанија и периодични публикации, статии, географски карти, ноти, научни извештаи, проекти и тн.</p>
-                        <h3>Дигиталната библиотека при</h3>
-                        <p>преку својот портал Dlib.mk, на своите посетители им овозможува пристап до различни библиографски содржини како што се книги, ракописи, списанија и периодични публикации, статии, географски карти, ноти, научни извештаи, проекти и тн.</p>
-                        <h3>Дигиталната библиотека при</h3>
-                        <p>преку својот портал Dlib.mk, на своите посетители им овозможува пристап до различни библиографски содржини како што се книги, ракописи, списанија и периодични публикации, статии, географски карти, ноти, научни извештаи, проекти и тн.</p>
-                    </div>
-                </xsl:when>
-                <xsl:when test="starts-with($request-uri, 'page/policy')">
-                    <div>
-                        <h1>Политика на приватност</h1>
-                        <h3>Дигиталната библиотека при</h3>
-                        <p>преку својот портал Dlib.mk, на своите посетители им овозможува пристап до различни библиографски содржини како што се книги, ракописи, списанија и периодични публикации, статии, географски карти, ноти, научни извештаи, проекти и тн.</p>
-                        <h3>Дигиталната библиотека при</h3>
-                        <p>преку својот портал Dlib.mk, на своите посетители им овозможува пристап до различни библиографски содржини како што се книги, ракописи, списанија и периодични публикации, статии, географски карти, ноти, научни извештаи, проекти и тн.</p>
-                        <h3>Дигиталната библиотека при</h3>
-                        <p>преку својот портал Dlib.mk, на своите посетители им овозможува пристап до различни библиографски содржини како што се книги, ракописи, списанија и периодични публикации, статии, географски карти, ноти, научни извештаи, проекти и тн.</p>
-                        <h3>Дигиталната библиотека при</h3>
-                        <p>преку својот портал Dlib.mk, на своите посетители им овозможува пристап до различни библиографски содржини како што се книги, ракописи, списанија и периодични публикации, статии, географски карти, ноти, научни извештаи, проекти и тн.</p>
-                        <h3>Дигиталната библиотека при</h3>
-                        <p>преку својот портал Dlib.mk, на своите посетители им овозможува пристап до различни библиографски содржини како што се книги, ракописи, списанија и периодични публикации, статии, географски карти, ноти, научни извештаи, проекти и тн.</p>
-                        <h3>Дигиталната библиотека при</h3>
-                        <p>преку својот портал Dlib.mk, на своите посетители им овозможува пристап до различни библиографски содржини како што се книги, ракописи, списанија и периодични публикации, статии, географски карти, ноти, научни извештаи, проекти и тн.</p>
-                        <h3>Дигиталната библиотека при</h3>
-                        <p>преку својот портал Dlib.mk, на своите посетители им овозможува пристап до различни библиографски содржини како што се книги, ракописи, списанија и периодични публикации, статии, географски карти, ноти, научни извештаи, проекти и тн.</p>
-                        <h3>Дигиталната библиотека при</h3>
-                        <p>преку својот портал Dlib.mk, на своите посетители им овозможува пристап до различни библиографски содржини како што се книги, ракописи, списанија и периодични публикации, статии, географски карти, ноти, научни извештаи, проекти и тн.</p>
-                        <h3>Дигиталната библиотека при</h3>
-                        <p>преку својот портал Dlib.mk, на своите посетители им овозможува пристап до различни библиографски содржини како што се книги, ракописи, списанија и периодични публикации, статии, географски карти, ноти, научни извештаи, проекти и тн.</p>
-                    </div>
                 </xsl:when>
                 <!-- Otherwise use default handling of body -->
                 <xsl:otherwise>
