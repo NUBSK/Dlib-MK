@@ -89,12 +89,6 @@
                     <xsl:attribute name="href">
                         <xsl:value-of select="."/>
                     </xsl:attribute>
-
-                    <!-- <xsl:attribute name="style">
-                        <xsl:text>background: url(</xsl:text>
-                        <xsl:value-of select="$context-path"/>
-                        <xsl:text>/static/icons/feed.png) no-repeat</xsl:text>
-                    </xsl:attribute> -->
                     <xsl:choose>
                         <xsl:when test="contains(., 'rss_1.0')">
                             <xsl:text>RSS 1.0</xsl:text>
