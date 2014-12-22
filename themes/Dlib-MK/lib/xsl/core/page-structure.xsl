@@ -18,7 +18,6 @@
     Author: Alexey Maslov
 
 -->
-
 <xsl:stylesheet xmlns:i18n="http://apache.org/cocoon/i18n/2.1"
     xmlns:dri="http://di.tamu.edu/DRI/1.0/"
     xmlns:mets="http://www.loc.gov/METS/"
@@ -31,15 +30,12 @@
     xmlns:confman="org.dspace.core.ConfigurationManager"
     xmlns="http://www.w3.org/1999/xhtml"
     exclude-result-prefixes="i18n dri mets xlink xsl dim xhtml mods dc confman">
-
     <xsl:output indent="yes"/>
-
     <!--
         Requested Page URI. Some functions may alter behavior of processing depending if URI matches a pattern.
         Specifically, adding a static page will need to override the DRI, to directly add content.
     -->
     <xsl:variable name="request-uri" select="/dri:document/dri:meta/dri:pageMeta/dri:metadata[@element='request'][@qualifier='URI']"/>
-
     <!--
         The starting point of any XSL processing is matching the root element. In DRI the root element is document,
         which contains a version attribute and three top level elements: body, options, meta (in that order).
@@ -62,14 +58,12 @@
             <!-- First of all, build the HTML head element -->
             <xsl:call-template name="buildHead"/>
             <!-- Then proceed to the body -->
-
             <!--paulirish.com/2008/conditional-stylesheets-vs-css-hacks-answer-neither/-->
             <xsl:text disable-output-escaping="yes">&lt;!--[if lt IE 7 ]&gt; &lt;body class="ie6"&gt; &lt;![endif]--&gt;
                 &lt;!--[if IE 7 ]&gt;    &lt;body class="ie7"&gt; &lt;![endif]--&gt;
                 &lt;!--[if IE 8 ]&gt;    &lt;body class="ie8"&gt; &lt;![endif]--&gt;
                 &lt;!--[if IE 9 ]&gt;    &lt;body class="ie9"&gt; &lt;![endif]--&gt;
                 &lt;!--[if (gt IE 9)|!(IE)]&gt;&lt;!--&gt;&lt;body&gt;&lt;!--&lt;![endif]--&gt;</xsl:text>
-
             <xsl:choose>
               <xsl:when test="/dri:document/dri:meta/dri:pageMeta/dri:metadata[@element='framing'][@qualifier='popup']">
                 <xsl:apply-templates select="dri:body/*"/>
@@ -78,10 +72,8 @@
                     <div id="ds-main">
                         <!--The header div, complete with title, subtitle and other junk-->
                         <xsl:call-template name="buildHeader"/>
-
                         <!--The trail is built by applying a template over pageMeta's trail children. -->
                         <xsl:call-template name="buildTrail"/>
-
                         <!--javascript-disabled warning, will be invisible if javascript is enabled-->
                         <div id="no-js-warning-wrapper" class="hidden">
                             <div id="no-js-warning">
@@ -90,8 +82,6 @@
                                 </div>
                             </div>
                         </div>
-
-
                         <!--ds-content is a groups ds-body and the navigation together and used to put the clearfix on, center, etc.
                             ds-content-wrapper is necessary for IE6 to allow it to center the page content-->
                         <div id="ds-content-wrapper">
@@ -105,57 +95,45 @@
                                 <xsl:apply-templates/>
                             </div>
                         </div>
-
                         <div id="otkrij-wrapper">
                             <xsl:call-template name="buildOtkrij"/>
                         </div>
-
                         <!--
                             The footer div, dropping whatever extra information is needed on the page. It will
                             most likely be something similar in structure to the currently given example. -->
                         <xsl:call-template name="buildFooter"/>
-
                     </div>
-
                 </xsl:otherwise>
             </xsl:choose>
                 <!-- Javascript at the bottom for fast page loading -->
               <xsl:call-template name="addJavascript"/>
-
             <xsl:text disable-output-escaping="yes">&lt;/body&gt;</xsl:text>
         </html>
     </xsl:template>
-
         <!-- The HTML head element contains references to CSS as well as embedded JavaScript code. Most of this
         information is either user-provided bits of post-processing (as in the case of the JavaScript), or
         references to stylesheets pulled directly from the pageMeta element. -->
-
     <!-- Hide Homepage Search box -->
     <xsl:template name="disable_front-page-search" match="dri:div[@id='aspect.discovery.SiteViewer.div.front-page-search']">
     </xsl:template>
-
     <!-- Hide Homepage Community list -->
     <xsl:template name="hide_homepage_community-list" match="dri:div[@id='aspect.artifactbrowser.CommunityBrowser.div.comunity-browser']">
         <xsl:if test="/dri:document/dri:meta/dri:pageMeta/dri:metadata[@element='request'][@qualifier='URI']/text()">
             <xsl:apply-templates />
         </xsl:if>
     </xsl:template>
-
     <xsl:template name="buildHead">
         <head>
             <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-
             <!-- Always force latest IE rendering engine (even in intranet) & Chrome Frame -->
             <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-
             <!--  Mobile Viewport Fix
                   j.mp/mobileviewport & davidbcalhoun.com/2010/viewport-metatag
             device-width : Occupy full width of the screen in its current orientation
             initial-scale = 1.0 retains dimensions instead of zooming out if page height > device height
             maximum-scale = 1.0 retains dimensions instead of zooming in if page width < device width
             -->
-            <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
-
+            <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
             <link rel="shortcut icon">
                 <xsl:attribute name="href">
                     <xsl:value-of select="/dri:document/dri:meta/dri:pageMeta/dri:metadata[@element='contextPath'][not(@qualifier)]"/>
@@ -172,7 +150,6 @@
                     <xsl:text>/images/apple-touch-icon.png</xsl:text>
                 </xsl:attribute>
             </link>
-
             <meta name="Generator">
               <xsl:attribute name="content">
                 <xsl:text>DSpace</xsl:text>
@@ -210,7 +187,6 @@
                     </xsl:attribute>
                 </link>
             </xsl:for-each>
-
             <!--  Add OpenSearch auto-discovery link -->
             <xsl:if test="/dri:document/dri:meta/dri:pageMeta/dri:metadata[@element='opensearch'][@qualifier='shortName']">
                 <link rel="search" type="application/opensearchdescription+xml">
@@ -229,64 +205,57 @@
                     </xsl:attribute>
                 </link>
             </xsl:if>
-
-            <!-- The following javascript removes the default text of empty text areas when they are focused on or submitted -->
-            <!-- There is also javascript to disable submitting a form when the 'enter' key is pressed. -->
-                        <script type="text/javascript">
-                                //Clear default text of empty text areas on focus
-                                function tFocus(element)
-                                {
-                                        if (element.value == '<i18n:text>xmlui.dri2xhtml.default.textarea.value</i18n:text>'){element.value='';}
-                                }
-                                //Clear default text of empty text areas on submit
-                                function tSubmit(form)
-                                {
-                                        var defaultedElements = document.getElementsByTagName("textarea");
-                                        for (var i=0; i != defaultedElements.length; i++){
-                                                if (defaultedElements[i].value == '<i18n:text>xmlui.dri2xhtml.default.textarea.value</i18n:text>'){
-                                                        defaultedElements[i].value='';}}
-                                }
-                                //Disable pressing 'enter' key to submit a form (otherwise pressing 'enter' causes a submission to start over)
-                                function disableEnterKey(e)
-                                {
-                                     var key;
-
-                                     if(window.event)
-                                          key = window.event.keyCode;     //Internet Explorer
-                                     else
-                                          key = e.which;     //Firefox and Netscape
-
-                                     if(key == 13)  //if "Enter" pressed, then disable!
-                                          return false;
-                                     else
-                                          return true;
-                                }
-
-                                function FnArray()
-                                {
-                                    this.funcs = new Array;
-                                }
-
-                                FnArray.prototype.add = function(f)
-                                {
-                                    if( typeof f!= "function" )
-                                    {
-                                        f = new Function(f);
-                                    }
-                                    this.funcs[this.funcs.length] = f;
-                                };
-
-                                FnArray.prototype.execute = function()
-                                {
-                                    for( var i=0; i <xsl:text disable-output-escaping="yes">&lt;</xsl:text> this.funcs.length; i++ )
-                                    {
-                                        this.funcs[i]();
-                                    }
-                                };
-
-                                var runAfterJSImports = new FnArray();
+            <xsl:text disable-output-escaping="yes">&lt;!--[if lte IE 9 ]&gt; 
+                &lt;https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js&gt; &lt;/script&gt;
+                &lt;https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js&gt; &lt;/script&gt;&lt;![endif]--&gt;</xsl:text>
+            <script type="text/javascript">
+                //Clear default text of empty text areas on focus
+                function tFocus(element)
+                {
+                    if (element.value == '<i18n:text>xmlui.dri2xhtml.default.textarea.value</i18n:text>'){element.value='';}
+                }
+                //Clear default text of empty text areas on submit
+                function tSubmit(form)
+                {
+                    var defaultedElements = document.getElementsByTagName("textarea");
+                        for (var i=0; i != defaultedElements.length; i++){
+                        if (defaultedElements[i].value == '<i18n:text>xmlui.dri2xhtml.default.textarea.value</i18n:text>'){
+                            defaultedElements[i].value='';}}
+                }
+                //Disable pressing 'enter' key to submit a form (otherwise pressing 'enter' causes a submission to start over)
+                function disableEnterKey(e)
+                {
+                    var key;
+                    if(window.event)
+                        key = window.event.keyCode;     //Internet Explorer
+                        else
+                        key = e.which;     //Firefox and Netscape
+                        if(key == 13)  //if "Enter" pressed, then disable!
+                            return false;
+                        else
+                            return true;
+                }
+                function FnArray()
+                {
+                    this.funcs = new Array;
+                }
+                FnArray.prototype.add = function(f)
+                {
+                    if( typeof f!= "function" )
+                        {
+                            f = new Function(f);
+                        }
+                            this.funcs[this.funcs.length] = f;
+                };
+                FnArray.prototype.execute = function()
+                    {
+                        for( var i=0; i <xsl:text disable-output-escaping="yes">&lt;</xsl:text> this.funcs.length; i++ )
+                    {
+                        this.funcs[i]();
+                    }
+                };
+                var runAfterJSImports = new FnArray();
             </script>
-
             <!-- Add the title in -->
             <xsl:variable name="page_title" select="/dri:document/dri:meta/dri:pageMeta/dri:metadata[@element='title']" />
             <title>
@@ -308,7 +277,6 @@
                         </xsl:otherwise>
                 </xsl:choose>
             </title>
-
             <!-- Head metadata in item pages -->
             <xsl:if test="/dri:document/dri:meta/dri:pageMeta/dri:metadata[@element='xhtml_head_item']">
                 <xsl:value-of select="/dri:document/dri:meta/dri:pageMeta/dri:metadata[@element='xhtml_head_item']"
@@ -319,20 +287,19 @@
             <xsl:for-each select="/dri:document/dri:meta/dri:pageMeta/dri:metadata[substring(@element, 1, 9) = 'citation_']">
                 <meta name="{@element}" content="{.}"></meta>
             </xsl:for-each>
-
         </head>
     </xsl:template>
-
-
     <!-- The header (distinct from the HTML head element) contains the title, subtitle, login box and various
         placeholders for header images -->
     <xsl:template name="buildHeader">
         <div id="ds-header-wrapper">
             <div id="ds-header" class="clearfix">
+                <div id="mobile-header">
+                    <a id="l-menu" href="#l-menu"><span class="icon icon-reorder">&#160;</span></a>
+                </div>
                 <a id="ds-header-logo-link">
                     <xsl:attribute name="href">
-                        <xsl:value-of
-                                select="/dri:document/dri:meta/dri:pageMeta/dri:metadata[@element='contextPath'][not(@qualifier)]"/>
+                        <xsl:value-of select="/dri:document/dri:meta/dri:pageMeta/dri:metadata[@element='contextPath'][not(@qualifier)]"/>
                         <xsl:text>/</xsl:text>
                     </xsl:attribute>
                     <span id="ds-header-logo">&#160;</span>
@@ -340,6 +307,9 @@
                        <i18n:text>xmlui.dri2xhtml.structural.head-subtitle</i18n:text>
                     </span>
                 </a>
+                <div id="mobile-header">
+                    <a id="r-menu" href="#r-menu"><span class="icon icon-gear">&#160;</span></a>
+                </div>
                 <h1 class="pagetitle visuallyhidden">
                     <xsl:choose>
                         <!-- protection against an empty page title -->
@@ -347,11 +317,9 @@
                             <xsl:text> </xsl:text>
                         </xsl:when>
                         <xsl:otherwise>
-                            <xsl:copy-of
-                                    select="/dri:document/dri:meta/dri:pageMeta/dri:metadata[@element='title']/node()"/>
+                            <xsl:copy-of select="/dri:document/dri:meta/dri:pageMeta/dri:metadata[@element='title']/node()"/>
                         </xsl:otherwise>
                     </xsl:choose>
-
                 </h1>
                 <div id="ds-user-box">
                     <ul id="nav">
@@ -361,14 +329,11 @@
                         <li><a href="/page/faq">Help</a></li>
                         <li><a href="/contact">Contact</a></li>
                     </ul>
-                </div>
-                
-                <xsl:call-template name="languageSelection" />
-                
+                </div>                
+                <xsl:call-template name="languageSelection" />                
             </div>
         </div>
     </xsl:template>
-
     <!-- The header (distinct from the HTML head element) contains the title, subtitle, login box and various placeholders for header images -->
     <xsl:template name="buildTrail">
         <div id="ds-trail-wrapper">
@@ -427,7 +392,6 @@
             </div>
         </div>
     </xsl:template>
-
     <xsl:template match="dri:trail">
         <!--put an arrow between the parts of the trail-->
         <xsl:if test="position()>1">
@@ -461,7 +425,6 @@
             </xsl:choose>
         </li>
     </xsl:template>
-
     <xsl:template name="cc-license">
         <xsl:param name="metadataURL"/>
         <xsl:variable name="externalMetadataURL">
@@ -469,7 +432,6 @@
             <xsl:value-of select="$metadataURL"/>
             <xsl:text>?sections=dmdSec,fileSec&amp;fileGrpTypes=THUMBNAIL</xsl:text>
         </xsl:variable>
-
         <xsl:variable name="ccLicenseName"
                       select="document($externalMetadataURL)//dim:field[@element='rights']"
                       />
@@ -489,7 +451,6 @@
                         </xsl:if>
                 </xsl:for-each>
         </xsl:variable>
-
    <xsl:if test="$ccLicenseName and $ccLicenseUri and contains($ccLicenseUri, 'creativecommons')">
         <div about="{$handleUri}" class="clearfix">
             <xsl:attribute name="style">
@@ -515,7 +476,6 @@
         </div>
         </xsl:if>
     </xsl:template>
-
     <xsl:template name="cc-logo">
         <xsl:param name="ccLicenseName"/>
         <xsl:param name="ccLicenseUri"/>
@@ -575,7 +535,6 @@
              </xsl:attribute>
         </img>
     </xsl:template>
-
     <!-- Discovery template -->
     <xsl:template name="buildOtkrij">
         <div id="otkrij" class="clearfix">
@@ -584,7 +543,6 @@
             </ul>
         </div>
     </xsl:template>
-
     <!-- Like the header, the footer contains various miscellaneous text, links, and image placeholders -->
     <xsl:template name="buildFooter">
         <div id="ds-footer-wrapper">
@@ -592,7 +550,6 @@
                 <div id="ds-footer-links">
                     <a href="http://www.dspace.org/" target="_blank">DSpace software</a> copyright&#160;&#169;&#160;2002-2013&#160; <a href="http://www.duraspace.org/" target="_blank">Duraspace</a>
                 </div>
-
                 <!--Invisible link to HTML sitemap (for search engines) -->
                 <a class="hidden">
                     <xsl:attribute name="href">
@@ -605,12 +562,9 @@
             </div>
         </div>
     </xsl:template>
-
-
 <!--
         The meta, body, options elements; the three top-level elements in the schema
 -->
-
     <!--
         The template to handle the dri:body element. It simply creates the ds-body div and applies
         templates of the body's child elements (which consists entirely of dri:div tags).
@@ -624,12 +578,12 @@
                     </p>
                 </div>
             </xsl:if>
-
             <!-- Check for the custom pages -->
             <xsl:choose>
                 <xsl:when test="starts-with($request-uri, 'page/about')">
                     <div>
                         <h1>About This Repository</h1>
+                        <div class="video-container">
                         <xsl:element name="iframe">
                             <xsl:attribute name="class">cf</xsl:attribute>  
                             <xsl:attribute name="width">798</xsl:attribute>
@@ -638,10 +592,10 @@
                             <xsl:attribute name="frameborder">0</xsl:attribute>
                             <xsl:comment/><!-- avoid empty tag value that breaks the html-->
                         </xsl:element>
+                        </div>
                         <p>To add your own content to this page, edit webapps/xmlui/themes/Mirage2/lib/xsl/core/page-structure.xsl and add your own content to the title, trail, and body. If you wish to add additional pages, you will need to create an additional xsl:when block and match the request-uri to whatever page you are adding. Currently, static pages created through altering XSL are only available under the URI prefix of page/.</p>
                     </div>
                 </xsl:when>
-
                 <xsl:when test="starts-with($request-uri, 'page/faq')">
                     <h1>DSpace Help</h1>
                     <p>DSpace captures, distributes and preserves digital research products. Here you can find articles, working papers, preprints, technical reports, conference papers and data sets in various digital formats. Content grows daily as new communities and collections are added to DSpace.</p>
@@ -823,7 +777,7 @@
                             <p>You can either cut and paste an abstract into this box, or you can type in the abstract. There is no limit to the length of the abstract. We urge you to include an abstract for the convenience of end-users and to enhance search and retrieval capabilities.</p>
                             <h3>Sponsors:</h3>
                             <p>If your item is the product of sponsored research, you can provide information about the sponsor(s) here. This is a freeform field where you can enter any note you like. Example:</p>
-                            <p style="text-align:center"><img src="sponsor.gif" alt="sponsor" width="542" height="110" /></p>
+                            <p style="text-align:center"><img src="/static/icons/sponsor.gif" alt="sponsor" width="542" height="110" /></p>
                             <h3>Description:</h3>
                             <p>Here you can enter any other information describing the item you are submitting or comments that may be of interest to users of the item.</p>
                             <p>Click on the "next" button to proceed, or "cancel/save" button to stop and save or cancel your submission.</p>
@@ -912,23 +866,18 @@
                             <p>For general information and news about DSpace, visit the <a href="http://www.dspace.org/" traget="_blank">DSpace Website</a>.</p>
                         </div>
                     </div>
-
                 </xsl:when>
                 <!-- Otherwise use default handling of body -->
                 <xsl:otherwise>
                     <xsl:apply-templates />
                 </xsl:otherwise>
             </xsl:choose>
-
         </div>
     </xsl:template>
-
-
     <!-- Currently the dri:meta element is not parsed directly. Instead, parts of it are referenced from inside
         other elements (like reference). The blank template below ends the execution of the meta branch -->
     <xsl:template match="dri:meta">
     </xsl:template>
-
     <!-- Meta's children: userMeta, pageMeta, objectMeta and repositoryMeta may or may not have templates of
         their own. This depends on the meta template implementation, which currently does not go this deep.
     <xsl:template match="dri:userMeta" />
@@ -936,12 +885,10 @@
     <xsl:template match="dri:objectMeta" />
     <xsl:template match="dri:repositoryMeta" />
     -->
-
     <xsl:template name="addJavascript">
         <xsl:variable name="jqueryVersion">
             <xsl:text>1.6.2</xsl:text>
         </xsl:variable>
-
         <xsl:variable name="protocol">
             <xsl:choose>
                 <xsl:when test="starts-with(confman:getProperty('dspace.baseUrl'), 'https://')">
@@ -953,21 +900,16 @@
             </xsl:choose>
         </xsl:variable>
         <script type="text/javascript" src="{concat($protocol, 'ajax.googleapis.com/ajax/libs/jquery/', $jqueryVersion ,'/jquery.min.js')}">&#160;</script>
-
         <xsl:variable name="localJQuerySrc">
                 <xsl:value-of select="/dri:document/dri:meta/dri:pageMeta/dri:metadata[@element='contextPath'][not(@qualifier)]"/>
             <xsl:text>/static/js/jquery-</xsl:text>
             <xsl:value-of select="$jqueryVersion"/>
             <xsl:text>.min.js</xsl:text>
         </xsl:variable>
-
         <script type="text/javascript">
             <xsl:text disable-output-escaping="yes">!window.jQuery &amp;&amp; document.write('&lt;script type="text/javascript" src="</xsl:text><xsl:value-of
                 select="$localJQuerySrc"/><xsl:text disable-output-escaping="yes">"&gt;&#160;&lt;\/script&gt;')</xsl:text>
         </script>
-
-
-
         <!-- Add theme javascipt  -->
         <xsl:for-each select="/dri:document/dri:meta/dri:pageMeta/dri:metadata[@element='javascript'][@qualifier='url']">
             <script type="text/javascript">
@@ -975,8 +917,6 @@
                     <xsl:value-of select="."/>
                 </xsl:attribute>&#160;</script>
         </xsl:for-each>
-
-
         <xsl:for-each select="/dri:document/dri:meta/dri:pageMeta/dri:metadata[@element='javascript'][not(@qualifier)]">
             <script type="text/javascript">
                 <xsl:attribute name="src">
@@ -988,7 +928,6 @@
                 </xsl:attribute>&#160;</script>
         </xsl:for-each>
         <script src="/static/js/plugins.js" type="text/javascript">&#160;</script>
-
         <!-- add "shared" javascript from static, path is relative to webapp root -->
         <xsl:for-each select="/dri:document/dri:meta/dri:pageMeta/dri:metadata[@element='javascript'][@qualifier='static']">
             <!--This is a dirty way of keeping the scriptaculous stuff from choice-support
@@ -1016,12 +955,10 @@
                 </xsl:when>
             </xsl:choose>
         </xsl:for-each>
-
         <!-- add setup JS code if this is a choices lookup page -->
         <xsl:if test="dri:body/dri:div[@n='lookup']">
           <xsl:call-template name="choiceLookupPopUpSetup"/>
         </xsl:if>
-
         <!--PNG Fix for IE6-->
         <xsl:text disable-output-escaping="yes">&lt;!--[if lt IE 7 ]&gt;</xsl:text>
         <script type="text/javascript">
@@ -1035,8 +972,6 @@
             <xsl:text>DD_belatedPNG.fix('#ds-header-logo');DD_belatedPNG.fix('#ds-footer-logo');$.each($('img[src$=png]'), function() {DD_belatedPNG.fixPng(this);});</xsl:text>
         </script>
         <xsl:text disable-output-escaping="yes" >&lt;![endif]--&gt;</xsl:text>
-
-
         <script type="text/javascript">
             runAfterJSImports.execute();
         </script>
@@ -1044,14 +979,12 @@
         <script type="text/javascript">var switchTo5x=true;</script>
         <script type="text/javascript" src="http://w.sharethis.com/button/buttons.js">&#160;</script>
         <script type="text/javascript">stLight.options({publisher: "enter-your-number-here", onhover: false});</script>
-
         <!-- Add a google analytics script if the key is present -->
         <xsl:if test="/dri:document/dri:meta/dri:pageMeta/dri:metadata[@element='google'][@qualifier='analytics']">
             <script type="text/javascript"><xsl:text>
                    var _gaq = _gaq || [];
                    _gaq.push(['_setAccount', '</xsl:text><xsl:value-of select="/dri:document/dri:meta/dri:pageMeta/dri:metadata[@element='google'][@qualifier='analytics']"/><xsl:text>']);
                    _gaq.push(['_trackPageview']);
-
                    (function() {
                        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
                        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
@@ -1060,5 +993,4 @@
            </xsl:text></script>
         </xsl:if>
     </xsl:template>
-
 </xsl:stylesheet>
