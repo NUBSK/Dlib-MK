@@ -172,7 +172,7 @@ span.composite-help,span.field-help{display:block;font-size:93%;margin-top:3px;w
 .ds-artifact-item.collection,.ds-artifact-item.community{padding-top:1px;padding-bottom:1px;border:0;width:100%;text-align:left}
 .community .artifact-title a{font-weight:500}
 .collection .artifact-title a{font-weight:400}
-#aspect_browseArtifacts_CollectionBrowse_list_collection-browse ul,#aspect_browseArtifacts_CommunityBrowse_list_community-browse ul{list-style:none}
+ul#aspect_browseArtifacts_CollectionBrowse_list_collection-browse,ul#aspect_browseArtifacts_CommunityBrowse_list_community-browse{list-style:none;margin:0 auto;text-align: center;}
 #aspect_browseArtifacts_CollectionBrowse_list_collection-browse li,#aspect_browseArtifacts_CommunityBrowse_list_community-browse li{display:inline-block;background:#7383A3;border:1px solid #4A5670;border-bottom-width:3px;-webkit-border-radius:5px;-moz-border-radius:5px;border-radius:5px;text-align:center;margin:15px 10px;width:140px;padding:10px}
 #aspect_browseArtifacts_CollectionBrowse_list_collection-browse li a,#aspect_browseArtifacts_CommunityBrowse_list_community-browse li a{font-size:16px;font-weight:500;text-transform:lowercase;color:#fff}
 #aspect_browseArtifacts_CollectionBrowse_list_collection-browse li a:hover,#aspect_browseArtifacts_CommunityBrowse_list_community-browse li a:hover{color:#333}
@@ -790,7 +790,6 @@ div#ds-feed-option a{padding:5px 10px}
 .ds-artifact-item{padding-left:5px}
 #ds-header-logo{margin-left:15px}
 .ds-rezultati-item img{width:105px}
-#aspect_browseArtifacts_CollectionBrowse_list_collection-browse li,#aspect_browseArtifacts_CommunityBrowse_list_community-browse li{margin:0;width:20%}
 ul{margin-left:0}
 }
 @media only screen and (max-width: 767px) {
@@ -816,6 +815,7 @@ a#l-menu,a#r-menu{color:#444}
 .ds-rezultati-item img{width:105px}
 .file-metadata span.bold,.item-metadata span.bold{margin-right:0;width:65px}
 #ds-header-logo-link{margin:0 38%;display:block}
+#aspect_browseArtifacts_CollectionBrowse_list_collection-browse li,#aspect_browseArtifacts_CommunityBrowse_list_community-browse li{width: 50%}
 }
 @media only screen and (max-width: 480px) {
 h1.ds-div-head{margin:10px 0 0 15px}

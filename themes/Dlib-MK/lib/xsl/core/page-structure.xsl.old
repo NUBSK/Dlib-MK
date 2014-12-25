@@ -1,0 +1,761 @@
+<xsl:stylesheet xmlns:i18n="http://apache.org/cocoon/i18n/2.1"
+    xmlns:dri="http://di.tamu.edu/DRI/1.0/"
+    xmlns:mets="http://www.loc.gov/METS/"
+    xmlns:xlink="http://www.w3.org/TR/xlink/"
+    xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0"
+    xmlns:dim="http://www.dspace.org/xmlns/dspace/dim"
+    xmlns:xhtml="http://www.w3.org/1999/xhtml"
+    xmlns:mods="http://www.loc.gov/mods/v3"
+    xmlns:dc="http://purl.org/dc/elements/1.1/"
+    xmlns:confman="org.dspace.core.ConfigurationManager"
+    xmlns="http://www.w3.org/1999/xhtml"
+    exclude-result-prefixes="i18n dri mets xlink xsl dim xhtml mods dc confman">
+    <xsl:output indent="yes"/>
+    <xsl:variable name="request-uri" select="/dri:document/dri:meta/dri:pageMeta/dri:metadata[@element='request'][@qualifier='URI']"/>
+    <xsl:template match="dri:document">
+        <html class="no-js">
+            <xsl:call-template name="buildHead"/>
+            <xsl:text disable-output-escaping="yes">&lt;!--[if lt IE 7 ]&gt; &lt;body class="ie6"&gt; &lt;![endif]--&gt;
+                &lt;!--[if IE 7 ]&gt;    &lt;body class="ie7"&gt; &lt;![endif]--&gt;
+                &lt;!--[if IE 8 ]&gt;    &lt;body class="ie8"&gt; &lt;![endif]--&gt;
+                &lt;!--[if IE 9 ]&gt;    &lt;body class="ie9"&gt; &lt;![endif]--&gt;
+                &lt;!--[if (gt IE 9)|!(IE)]&gt;&lt;!--&gt;&lt;body&gt;&lt;!--&lt;![endif]--&gt;</xsl:text>
+            <xsl:choose>
+              <xsl:when test="/dri:document/dri:meta/dri:pageMeta/dri:metadata[@element='framing'][@qualifier='popup']">
+                <xsl:apply-templates select="dri:body/*"/>
+              </xsl:when>
+                  <xsl:otherwise>
+                    <div id="ds-main">
+                        <xsl:call-template name="buildHeader"/>
+                        <xsl:call-template name="buildTrail"/>
+                        <div id="no-js-warning-wrapper" class="hidden">
+                            <div id="no-js-warning">
+                                <div class="notice failure">
+                                    <xsl:text>JavaScript is disabled for your browser. Some features of this site may not work without it.</xsl:text>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="ds-content-wrapper">
+                            <div id="ds-content" class="clearfix">
+                                <xsl:apply-templates/>
+                            </div>
+                        </div>
+                        <div id="otkrij-wrapper">
+                            <xsl:call-template name="buildOtkrij"/>
+                        </div>
+                        <xsl:call-template name="buildFooter"/>
+                    </div>
+                </xsl:otherwise>
+            </xsl:choose>
+              <xsl:call-template name="addJavascript"/>
+            <xsl:text disable-output-escaping="yes">&lt;/body&gt;</xsl:text>
+        </html>
+    </xsl:template>
+    <xsl:template name="disable_front-page-search" match="dri:div[@id='aspect.discovery.SiteViewer.div.front-page-search']">
+    </xsl:template>
+    <xsl:template name="hide_homepage_community-list" match="dri:div[@id='aspect.artifactbrowser.CommunityBrowser.div.comunity-browser']">
+        <xsl:if test="/dri:document/dri:meta/dri:pageMeta/dri:metadata[@element='request'][@qualifier='URI']/text()">
+            <xsl:apply-templates />
+        </xsl:if>
+    </xsl:template>
+    <xsl:template name="buildHead">
+        <head>
+            <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+            <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+            <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+
+            <link rel="shortcut icon">
+                <xsl:attribute name="href">
+                    <xsl:value-of select="/dri:document/dri:meta/dri:pageMeta/dri:metadata[@element='contextPath'][not(@qualifier)]"/>
+                    <xsl:text>/themes/</xsl:text>
+                    <xsl:value-of select="/dri:document/dri:meta/dri:pageMeta/dri:metadata[@element='theme'][@qualifier='path']"/>
+                    <xsl:text>/images/favicon.ico</xsl:text>
+                </xsl:attribute>
+            </link>
+            <link rel="apple-touch-icon">
+                <xsl:attribute name="href">
+                    <xsl:value-of select="/dri:document/dri:meta/dri:pageMeta/dri:metadata[@element='contextPath'][not(@qualifier)]"/>
+                    <xsl:text>/themes/</xsl:text>
+                    <xsl:value-of select="/dri:document/dri:meta/dri:pageMeta/dri:metadata[@element='theme'][@qualifier='path']"/>
+                    <xsl:text>/images/apple-touch-icon.png</xsl:text>
+                </xsl:attribute>
+            </link>
+            <meta name="Generator">
+              <xsl:attribute name="content">
+                <xsl:text>DSpace</xsl:text>
+                <xsl:if test="/dri:document/dri:meta/dri:pageMeta/dri:metadata[@element='dspace'][@qualifier='version']">
+                  <xsl:text> </xsl:text>
+                  <xsl:value-of select="/dri:document/dri:meta/dri:pageMeta/dri:metadata[@element='dspace'][@qualifier='version']"/>
+                </xsl:if>
+              </xsl:attribute>
+            </meta>
+            <xsl:for-each select="/dri:document/dri:meta/dri:pageMeta/dri:metadata[@element='stylesheet']">
+                <link rel="stylesheet" type="text/css">
+                    <xsl:attribute name="media">
+                        <xsl:value-of select="@qualifier"/>
+                    </xsl:attribute>
+                    <xsl:attribute name="href">
+                        <xsl:value-of select="/dri:document/dri:meta/dri:pageMeta/dri:metadata[@element='contextPath'][not(@qualifier)]"/>
+                        <xsl:text>/themes/</xsl:text>
+                        <xsl:value-of select="/dri:document/dri:meta/dri:pageMeta/dri:metadata[@element='theme'][@qualifier='path']"/>
+                        <xsl:text>/</xsl:text>
+                        <xsl:value-of select="."/>
+                    </xsl:attribute>
+                </link>
+            </xsl:for-each>
+            <link href='http://fonts.googleapis.com/css?family=Ubuntu:400,500&amp;subset=latin,cyrillic-ext' rel='stylesheet' type='text/css'/>
+            <xsl:for-each select="/dri:document/dri:meta/dri:pageMeta/dri:metadata[@element='feed']">
+                <link rel="alternate" type="application">
+                    <xsl:attribute name="type">
+                        <xsl:text>application/</xsl:text>
+                        <xsl:value-of select="@qualifier"/>
+                    </xsl:attribute>
+                    <xsl:attribute name="href">
+                        <xsl:value-of select="."/>
+                    </xsl:attribute>
+                </link>
+            </xsl:for-each>
+            <xsl:if test="/dri:document/dri:meta/dri:pageMeta/dri:metadata[@element='opensearch'][@qualifier='shortName']">
+                <link rel="search" type="application/opensearchdescription+xml">
+                    <xsl:attribute name="href">
+                        <xsl:value-of select="/dri:document/dri:meta/dri:pageMeta/dri:metadata[@element='request'][@qualifier='scheme']"/>
+                        <xsl:text>://</xsl:text>
+                        <xsl:value-of select="/dri:document/dri:meta/dri:pageMeta/dri:metadata[@element='request'][@qualifier='serverName']"/>
+                        <xsl:text>:</xsl:text>
+                        <xsl:value-of select="/dri:document/dri:meta/dri:pageMeta/dri:metadata[@element='request'][@qualifier='serverPort']"/>
+                        <xsl:value-of select="$context-path"/>
+                        <xsl:text>/</xsl:text>
+                        <xsl:value-of select="/dri:document/dri:meta/dri:pageMeta/dri:metadata[@element='opensearch'][@qualifier='autolink']"/>
+                    </xsl:attribute>
+                    <xsl:attribute name="title" >
+                        <xsl:value-of select="/dri:document/dri:meta/dri:pageMeta/dri:metadata[@element='opensearch'][@qualifier='shortName']"/>
+                    </xsl:attribute>
+                </link>
+            </xsl:if>
+            <script type="text/javascript">
+                //Clear default text of empty text areas on focus
+                function tFocus(element) {
+                    if (element.value == '<i18n:text>xmlui.dri2xhtml.default.textarea.value</i18n:text>') {
+                        element.value = '';
+                    }
+                }
+                //Clear default text of empty text areas on submit
+                function tSubmit(form) {
+                    var defaultedElements = document.getElementsByTagName("textarea");
+                    for (var i = 0; i != defaultedElements.length; i++) {
+                        if (defaultedElements[i].value == '<i18n:text>xmlui.dri2xhtml.default.textarea.value</i18n:text>') {
+                            defaultedElements[i].value = '';
+                        }
+                    }
+                }
+                //Disable pressing 'enter' key to submit a form (otherwise pressing 'enter' causes a submission to start over)
+                function disableEnterKey(e) {
+                    var key;
+                    if (window.event) key = window.event.keyCode; //Internet Explorer
+                    else key = e.which; //Firefox and Netscape
+                    if (key == 13) //if "Enter" pressed, then disable!
+                    return false;
+                    else return true;
+                }
+                function FnArray() {
+                    this.funcs = new Array;
+                }
+                FnArray.prototype.add = function (f) {
+                    if (typeof f != "function") {
+                        f = new Function(f);
+                    }
+                    this.funcs[this.funcs.length] = f;
+                };
+                FnArray.prototype.execute = function () {
+                    for (var i = 0; i <xsl:text disable-output-escaping="yes">&lt;</xsl:text> this.funcs.length; i++ )
+                    {
+                        this.funcs[i]();
+                    }
+                };
+                var runAfterJSImports = new FnArray();
+            </script>
+            <xsl:variable name="page_title" select="/dri:document/dri:meta/dri:pageMeta/dri:metadata[@element='title']" />
+            <title>
+                <xsl:choose>
+                        <xsl:when test="starts-with($request-uri, 'page/about')">
+                            <xsl:text>About This Repository</xsl:text>
+                        </xsl:when>
+                        <xsl:when test="not($page_title)">
+                            <i18n:text>xmlui.dri2xhtml.METS-1.0.no-title</i18n:text>
+                        </xsl:when>
+                        <xsl:when test="$page_title = ''">
+                            <i18n:text>xmlui.dri2xhtml.METS-1.0.no-title</i18n:text>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <xsl:copy-of select="$page_title/node()" />
+                        </xsl:otherwise>
+                </xsl:choose>
+            </title>
+            <xsl:if test="/dri:document/dri:meta/dri:pageMeta/dri:metadata[@element='xhtml_head_item']">
+                <xsl:value-of select="/dri:document/dri:meta/dri:pageMeta/dri:metadata[@element='xhtml_head_item']" disable-output-escaping="yes"/>
+            </xsl:if>
+            <xsl:for-each select="/dri:document/dri:meta/dri:pageMeta/dri:metadata[substring(@element, 1, 9) = 'citation_']">
+                <meta name="{@element}" content="{.}"></meta>
+            </xsl:for-each>
+        </head>
+    </xsl:template>
+    <xsl:template name="buildHeader">
+        <div id="ds-header-wrapper">
+            <div id="ds-header" class="clearfix">
+                <div id="mobile-header">
+                    <a id="left-menu" href="#ds-user-box"><span class="icon icon-reorder">&#160;</span></a> 
+                </div>
+                <a id="ds-header-logo-link">
+                    <xsl:attribute name="href">
+                        <xsl:value-of select="/dri:document/dri:meta/dri:pageMeta/dri:metadata[@element='contextPath'][not(@qualifier)]"/>
+                        <xsl:text>/</xsl:text>
+                    </xsl:attribute>
+                    <span id="ds-header-logo">&#160;</span>
+                    <span id="ds-header-logo-text">
+                       <i18n:text>xmlui.dri2xhtml.structural.head-subtitle</i18n:text>
+                    </span>
+                </a>
+                <div id="mobile-header">
+                    <a id="right-menu" href="#ds-options-wrapper"><span class="icon icon-gear">&#160;</span></a>
+                </div>
+                <h1 class="pagetitle visuallyhidden">
+                    <xsl:choose>
+                        <xsl:when test="not(/dri:document/dri:meta/dri:pageMeta/dri:metadata[@element='title'])">
+                            <xsl:text> </xsl:text>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <xsl:copy-of select="/dri:document/dri:meta/dri:pageMeta/dri:metadata[@element='title']/node()"/>
+                        </xsl:otherwise>
+                    </xsl:choose>
+                </h1>
+                <div id="ds-user-box">
+                    <ul id="nav">
+                        <li><a href="/">Дома</a></li>
+                        <li><a href="/page/about">За нас</a></li>
+                        <li><a href="/community-list">Колекции</a>
+                        <span class="strelka">&#160;</span>
+                            <ul>
+                                <li><a href="/handle/68275/2">Институции</a></li>
+                                <li><a href="/handle/68275/1531">Археографија</a></li>
+                                <li><a href="/handle/68275/1537">Ракописи</a></li>
+                                <li><a href="/handle/68275/1553">Списанија и весници</a></li>
+                                <li><a href="/handle/68275/1548">Картографија</a></li>
+                                <li><a href="/handle/68275/1541">Ликовни уметности</a></li>
+                                <li><a href="/handle/68275/1544">Музичка уметност</a></li>
+                                <li><a href="/handle/68275/1557">Електронска читална</a></li>
+                            </ul></li>
+                        <li><a href="/page/kontakt">Контакт</a></li>
+                        <li><a href="/page/faq">Помош</a></li>
+                    </ul>
+                </div>                
+                <xsl:call-template name="languageSelection" />                
+            </div>
+        </div>
+    </xsl:template>
+    <xsl:template name="buildTrail">
+        <div id="ds-trail-wrapper">
+            <div id="ds-trail">
+                <ul>
+                    <xsl:choose>
+                        <xsl:when test="starts-with($request-uri, 'page/about')">
+                             <xsl:text>За нас</xsl:text>
+                        </xsl:when>
+                        <xsl:when test="starts-with($request-uri, 'page/faq')">
+                             <xsl:text>Најчесто поставувани прашања</xsl:text>
+                        </xsl:when>
+                        <xsl:when test="starts-with($request-uri, 'page/pomos')">
+                             <xsl:text>Помош при пребарување</xsl:text>
+                        </xsl:when>
+                        <xsl:when test="starts-with($request-uri, 'page/kontakt')">
+                             <xsl:text>Контакт</xsl:text>
+                        </xsl:when>
+                        <xsl:when test="starts-with($request-uri, 'page/terms')">
+                             <xsl:text>Услови на користење</xsl:text>
+                        </xsl:when>
+                        <xsl:when test="starts-with($request-uri, 'page/policy')">
+                             <xsl:text>Полиса на приватност</xsl:text>
+                        </xsl:when>
+                        <xsl:when test="count(/dri:document/dri:meta/dri:pageMeta/dri:trail) = 0">
+                            <li class="ds-trail-link first-link">-</li>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <xsl:apply-templates select="/dri:document/dri:meta/dri:pageMeta/dri:trail"/>
+                        </xsl:otherwise>
+                    </xsl:choose>
+                </ul>
+                <div id="ds-search-option">
+                    <form id="ds-search-form" method="post">
+                        <xsl:attribute name="action">
+                            <xsl:value-of select="/dri:document/dri:meta/dri:pageMeta/dri:metadata[@element='contextPath']"/>
+                            <xsl:value-of select="/dri:document/dri:meta/dri:pageMeta/dri:metadata[@element='search'][@qualifier='simpleURL']"/>
+                        </xsl:attribute>
+                        <fieldset>
+                            <input id="search-glaven" class="ds-text-field " type="text">
+                                <xsl:attribute name="name">
+                                    <xsl:value-of select="/dri:document/dri:meta/dri:pageMeta/dri:metadata[@element='search'][@qualifier='queryField']"/>
+                                </xsl:attribute>
+                            </input>
+                            <input class="ds-button-field search-icon malo" name="submit" type="submit" i18n:attr="value" value="xmlui.general.go">
+                                    <xsl:attribute name="onclick">
+                                    <xsl:text>
+                                        var radio = document.getElementById(&quot;ds-search-form-scope-container&quot;);
+                                           if (radio != undefined &amp;&amp; radio.checked)
+                                        {
+                                        var form = document.getElementById(&quot;ds-search-form&quot;);
+                                        form.action=
+                                    </xsl:text>
+                                    <xsl:text>&quot;</xsl:text>
+                                    <xsl:value-of
+                                        select="/dri:document/dri:meta/dri:pageMeta/dri:metadata[@element='contextPath']"/>
+                                    <xsl:text>/handle/&quot; + radio.value + &quot;</xsl:text>
+                                    <xsl:value-of select="/dri:document/dri:meta/dri:pageMeta/dri:metadata[@element='search'][@qualifier='simpleURL']"/>
+                                    <xsl:text>&quot; ; </xsl:text>
+                                    <xsl:text>
+                                        }
+                                    </xsl:text>
+                                    </xsl:attribute>
+                            </input>
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </xsl:template>
+    <xsl:template match="dri:trail">
+        <xsl:if test="position()>1">
+            <li class="ds-trail-arrow">
+                <xsl:text>&#8594;</xsl:text>
+            </li>
+        </xsl:if>
+        <li>
+            <xsl:attribute name="class">
+                <xsl:text>ds-trail-link </xsl:text>
+                <xsl:if test="position()=1">
+                    <xsl:text>first-link </xsl:text>
+                </xsl:if>
+                <xsl:if test="position()=last()">
+                    <xsl:text>last-link</xsl:text>
+                </xsl:if>
+            </xsl:attribute>
+            <xsl:choose>
+                <xsl:when test="./@target">
+                    <a>
+                        <xsl:attribute name="href">
+                            <xsl:value-of select="./@target"/>
+                        </xsl:attribute>
+                        <xsl:apply-templates />
+                    </a>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:apply-templates />
+                </xsl:otherwise>
+            </xsl:choose>
+        </li>
+    </xsl:template>
+    <xsl:template name="cc-license">
+        <xsl:param name="metadataURL"/>
+        <xsl:variable name="externalMetadataURL">
+            <xsl:text>cocoon:/</xsl:text>
+            <xsl:value-of select="$metadataURL"/>
+            <xsl:text>?sections=dmdSec,fileSec&amp;fileGrpTypes=THUMBNAIL</xsl:text>
+        </xsl:variable>
+        <xsl:variable name="ccLicenseName" select="document($externalMetadataURL)//dim:field[@element='rights']"/>
+        <xsl:variable name="ccLicenseUri" select="document($externalMetadataURL)//dim:field[@element='rights'][@qualifier='uri']"/>
+        <xsl:variable name="handleUri">
+                    <xsl:for-each select="document($externalMetadataURL)//dim:field[@element='identifier' and @qualifier='uri']">
+                        <a>
+                            <xsl:attribute name="href">
+                                <xsl:copy-of select="./node()"/>
+                            </xsl:attribute>
+                            <xsl:copy-of select="./node()"/>
+                        </a>
+                        <xsl:if test="count(following-sibling::dim:field[@element='identifier' and @qualifier='uri']) != 0">
+                            <xsl:text>, </xsl:text>
+                        </xsl:if>
+                </xsl:for-each>
+        </xsl:variable>
+   <xsl:if test="$ccLicenseName and $ccLicenseUri and contains($ccLicenseUri, 'creativecommons')">
+        <div about="{$handleUri}" class="clearfix">
+            <xsl:attribute name="style">
+                <xsl:text>margin:0em 2em 0em 2em; padding-bottom:0em;</xsl:text>
+            </xsl:attribute>
+            <a rel="license"
+                href="{$ccLicenseUri}"
+                alt="{$ccLicenseName}"
+                title="{$ccLicenseName}"
+                itemprop="licence"
+                >
+                <xsl:call-template name="cc-logo">
+                    <xsl:with-param name="ccLicenseName" select="$ccLicenseName"/>
+                    <xsl:with-param name="ccLicenseUri" select="$ccLicenseUri"/>
+                </xsl:call-template>
+            </a>
+            <span>
+                <xsl:attribute name="style">
+                    <xsl:text>vertical-align:middle; text-indent:0 !important;</xsl:text>
+                </xsl:attribute>
+                <i18n:text>xmlui.dri2xhtml.METS-1.0.cc-license-text</i18n:text>
+                <xsl:value-of select="$ccLicenseName"/>
+            </span>
+        </div>
+        </xsl:if>
+    </xsl:template>
+    <xsl:template name="cc-logo">
+        <xsl:param name="ccLicenseName"/>
+        <xsl:param name="ccLicenseUri"/>
+        <xsl:variable name="ccLogo">
+             <xsl:choose>
+                  <xsl:when test="starts-with($ccLicenseUri,
+                                           'http://creativecommons.org/licenses/by/')">
+                       <xsl:value-of select="'cc-by.png'" />
+                  </xsl:when>
+                  <xsl:when test="starts-with($ccLicenseUri,
+                                           'http://creativecommons.org/licenses/by-sa/')">
+                       <xsl:value-of select="'cc-by-sa.png'" />
+                  </xsl:when>
+                  <xsl:when test="starts-with($ccLicenseUri,
+                                           'http://creativecommons.org/licenses/by-nd/')">
+                       <xsl:value-of select="'cc-by-nd.png'" />
+                  </xsl:when>
+                  <xsl:when test="starts-with($ccLicenseUri,
+                                           'http://creativecommons.org/licenses/by-nc/')">
+                       <xsl:value-of select="'cc-by-nc.png'" />
+                  </xsl:when>
+                  <xsl:when test="starts-with($ccLicenseUri,
+                                           'http://creativecommons.org/licenses/by-nc-sa/')">
+                       <xsl:value-of select="'cc-by-nc-sa.png'" />
+                  </xsl:when>
+                  <xsl:when test="starts-with($ccLicenseUri,
+                                           'http://creativecommons.org/licenses/by-nc-nd/')">
+                       <xsl:value-of select="'cc-by-nc-nd.png'" />
+                  </xsl:when>
+                  <xsl:when test="starts-with($ccLicenseUri,
+                                           'http://creativecommons.org/publicdomain/zero/')">
+                       <xsl:value-of select="'cc-zero.png'" />
+                  </xsl:when>
+                  <xsl:when test="starts-with($ccLicenseUri,
+                                           'http://creativecommons.org/publicdomain/mark/')">
+                       <xsl:value-of select="'cc-mark.png'" />
+                  </xsl:when>
+                  <xsl:otherwise>
+                       <xsl:value-of select="'cc-generic.png'" />
+                  </xsl:otherwise>
+             </xsl:choose>
+        </xsl:variable>
+        <xsl:variable name="ccLogoImgSrc">
+            <xsl:value-of select="$theme-path"/>
+            <xsl:text>/images/creativecommons/</xsl:text>
+            <xsl:value-of select="$ccLogo"/>
+        </xsl:variable>
+        <img>
+             <xsl:attribute name="src">
+                <xsl:value-of select="$ccLogoImgSrc"/>
+             </xsl:attribute>
+             <xsl:attribute name="alt">
+                 <xsl:value-of select="$ccLicenseName"/>
+             </xsl:attribute>
+             <xsl:attribute name="style">
+                 <xsl:text>float:left; margin:0em 1em 0em 0em; border:none;</xsl:text>
+             </xsl:attribute>
+        </img>
+    </xsl:template>
+    <xsl:template name="buildOtkrij">
+        <div id="otkrij" class="clearfix">
+            <ul>
+                <xsl:apply-templates select="dri:options/dri:list[@id='aspect.discovery.Navigation.list.discovery']" mode="nested"/>
+            </ul>
+        </div>
+    </xsl:template>
+    <xsl:template name="buildFooter">
+        <div id="ds-footer-wrapper">
+            <div id="ds-footer">
+                <div id="ds-footer-links">
+                    <a href="http://www.dspace.org/" target="_blank">DSpace software</a> copyright&#160;&#169;&#160;2002-2013&#160; <a href="http://www.duraspace.org/" target="_blank">Duraspace</a>
+                </div>
+                <div id="ds-footer-links">
+                    <a>
+                        <xsl:attribute name="href">
+                            <xsl:value-of
+                                    select="/dri:document/dri:meta/dri:pageMeta/dri:metadata[@element='contextPath'][not(@qualifier)]"/>
+                            <xsl:text>/contact</xsl:text>
+                        </xsl:attribute>
+                        <i18n:text>xmlui.dri2xhtml.structural.contact-link</i18n:text>
+                    </a>
+                    <xsl:text> | </xsl:text>
+                    <a>
+                        <xsl:attribute name="href">
+                            <xsl:value-of
+                                    select="/dri:document/dri:meta/dri:pageMeta/dri:metadata[@element='contextPath'][not(@qualifier)]"/>
+                            <xsl:text>/feedback</xsl:text>
+                        </xsl:attribute>
+                        <i18n:text>xmlui.dri2xhtml.structural.feedback-link</i18n:text>
+                    </a>
+                </div>
+                <a class="hidden">
+                    <xsl:attribute name="href">
+                        <xsl:value-of
+                                select="/dri:document/dri:meta/dri:pageMeta/dri:metadata[@element='contextPath'][not(@qualifier)]"/>
+                        <xsl:text>/htmlmap</xsl:text>
+                    </xsl:attribute>
+                    <xsl:text>&#160;</xsl:text>
+                </a>
+            </div>
+        </div>
+    </xsl:template>
+    <xsl:template match="dri:body">
+        <div id="ds-body">
+            <xsl:if test="/dri:document/dri:meta/dri:pageMeta/dri:metadata[@element='alert'][@qualifier='message']">
+                <div id="ds-system-wide-alert">
+                    <p>
+                        <xsl:copy-of select="/dri:document/dri:meta/dri:pageMeta/dri:metadata[@element='alert'][@qualifier='message']/node()"/>
+                    </p>
+                </div>
+            </xsl:if>
+            <xsl:choose>
+                <xsl:when test="starts-with($request-uri, 'page/about')">
+                    <div>
+                        <h1>За нас</h1>
+                        <img src="/static/icons/dlib.jpg" alt="Компјутер со книги" title="Компјутер со книги" width="798" height="300" />
+                        <p>Дигиталната библиотека при <a href="http://nubsk.edu.mk" alt="НУ-НУБ „Св. Климент Охридски“ - Скопје" target="_blank" title="НУ-НУБ „Св. Климент Охридски“ - Скопје">НУ-НУБ „Св. Климент Охридски“ - Скопје</a> преку својот портал Dlib.mk, на своите посетители им овозможува пристап до различни библиографски содржини како што се книги, ракописи, списанија и периодични публикации, статии, географски карти, ноти, научни извештаи, проекти итн.</p>
+                        <p>Порталот <a href="/" alt="Дигитална библиотека на Македонија" title="Дигитална библиотека на Македонија">Dlib.mk</a>, пред сè, има за задача да зачува, презентира и дистрибуира најразлични библиографски содржини во дигитална форма како дел од програмата за заштита на културното наследство и промовирање на нашата култура во јавноста.</p>
+                        <p>Од ноември 2013 година, врз основа на партнерски договор за соработка, Dlib.mk прерасна во Дигитална библиотека на Македонија. Со овој чекор се овозможи, во процесот на дигитализација, со минимална инвестиција да се вклучат и други институции во процесот на дигитаализација. НУ НУБ „Св. Климент Охридски“ - Скопје, ја презема обрската за дигитализација на редок библиотечен материјал, хостирање и одржување на содржините, како и изработка на метаподатоци. На тој начин, <a href="/handle/68275/2" title="Институции во Dlib.mk">институциите членки во Dlib.mk</a> имаат можност, на пошироката јавност, да ги претстават сите материјали од своите збирки што се од особено значење за културата, уметноста и науката. Во исто време, институциите значително ги намалуваат своите трошоци за инфрастуктура и човечки ресурси.</p>
+                        <p>За повеќе информации како да станете член во Dlib.mk, посетете ја страницата за <a href="/page/faq" title="Најчесто поставувани прашања">Најчесто поставувани прашања</a> или преку страницата за <a href="/page/kontakt" title="Контакт">Контакт</a>.</p>
+                        <h3>Контакт информации:</h3>
+                        <ul>
+                            <li><strong>Одговорно лице:</strong> Александар Стојанов</li>
+                            <li><strong>Адреса:</strong> Бул. „Гоце Делчев“, бр. 6</li>
+                            <li><strong>Телефон:</strong> +389 (0)2 3230 151 лок. 205</li>
+                        </ul>
+                    </div>
+                </xsl:when>
+                <xsl:when test="starts-with($request-uri, 'page/faq')">
+                    <h1>Најчесто поставувани прашања</h1>
+                    <div id="accordion">
+                        <h2>Прегледај</h2>
+                        <div>
+                            <p>Опцијата „Прегледај“ која се наоѓа во сивото поле од десната страна, ви овозможува преглед според следниве критериуми:</p>
+                            <ul>
+                                <li><strong>Прелистај според колекции и збрики:</strong> Ве води низ сите колекции по алфанумерички редослед и ви овозможува да ги погледнете потколекциите и збирките во секоја колекција.</li>
+                                <li><strong>Преглед по дата на издавање:</strong> Ве води низ листа од записи во Dlib.mk по опаѓачки хронолошки редослед.</li>
+                                <li><strong>Преглед по автор:</strong> Ве води низ алфанумеричка листа на сите автори на книги Dlib.mk.</li>
+                                <li><strong>Преглед по наслов:</strong> Ве води низ алфанумеричка листа од наслови на сите записи во Dlib.mk.</li>
+                                <li><strong>Преглед по клучен збор:</strong> Ве води низ алфанумеричка листа од теми (предметни определници) што се однесуваат на записи во Dlib.mk.</li>
+                            </ul>
+                        </div>
+                        <h2>Пребарување</h2>
+                        <div>
+                            <p>За да пребарувате во целиот Dlib.mk, користете го полето за пребарување кое се наоѓа во горниот десен агол. </p>
+                        </div>
+                        <h2>Напредно пребарување</h2>
+                        <div>
+                            <p>FAQ</p>
+                        </div>
+                        <h2>Регистрација</h2>
+                        <div>
+                            <p>FAQ</p>
+                        </div>
+                        <h2>Кориснички профил</h2>
+                        <div>
+                            <p>FAQ</p>
+                        </div>
+                        <h2>Известувања и претплати</h2>
+                        <div>
+                            <p>Опцијата за електронски претплати е достапна само на регистрирани корисници. Корисниците можат да се претплатат за да добиваат известувања по е-пошта за нови записи што се додадени во збирки. Бројот на збирки на кои може да се претплатат корисниците е неограничен. За да се претплатите:</p>
+                            <ul>
+                                <li>следете го линкот за најава во Dlib.mk</li>
+                                <li>одете до страната за уредување на вашиот профил</li>
+                                <li>во делот обележан како <strong>Електронски претплати</strong>, изберете од листата на збирки во паѓачкото мени и притиснете на копчето <strong>додај</strong>.</li>
+                            </ul>
+                            <p>За сите корисници кои не се членови во Dlib.mk, а сакаат да добиваат електронски известувања, тоа може да го сторат преку опцијата за RSS. Во синото поле од десна страна, на почетната страна на Dlib.mk се појавува опцијата за RSS и тоа во три формати: RSS 1.0, RSS 2.0 и Atom. Доколку сакате да ги ограничите претплатите, тоа може да го направите преку почетните страници на која било колекција или збирка.</p>
+                        </div>
+                        <h2>Колекции и збирки</h2>
+                        <div>
+                            <p>Колекциите може да содржат неограничен број потколекции и збирки во Dlib.mk. Колекциите може да бидат организирани по тема или по тип на информација (како работни документи или сет од информации) или по кој било друг начин на сортирање, што збирката го избрала корисен за организација на нејзините записи. Колекциите имаат различни полиси и работни процедури.</p>
+                            <p>Секоја колекција и збирка во Dlib.mk има своја почетна страница која прикажува информации, новости, линкови и лиценца под која нејзините записи се достапни за јавноста.</p>
+                            <p>Матичната колекција за секој запис е според институцијата - сопственик на материјалот. Потоа, записите се мапираат(означуваат) во останатите колекции според содржина. Единствен исклучoк на ова правило е колекцијата <strong>Електронска читална</strong>, која поради Законот за авторски права и интелектуална сопственост на Република Македонија, е достапна исклучиво на регистрирани корисници во просториите на НУ НУБ „Св. Климент Охридски“ - Скопје.</p>
+                        </div>
+                        <h2>Членство во DLIB.MK</h2>
+                        <div>
+                            <p>FAQ</p>
+                        </div>
+                        <h2>Харвестирање</h2>
+                        <div>
+                            <p>FAQ</p>
+                        </div>
+                        <h2>Платформа DSpace</h2>
+                        <div>
+                            <p>Платформа DSpace</p>
+                        </div>
+                        <h2>Корисни линкови</h2>
+                        <div>
+                            <p>Платформа DSpace</p>
+                        </div>
+                    </div>
+                </xsl:when>
+                <xsl:when test="starts-with($request-uri, 'page/kontakt')">
+                    <div>
+                        <h1>Контакт</h1>
+                        <xsl:element name="iframe">
+                            <xsl:attribute name="class">cf</xsl:attribute>  
+                            <xsl:attribute name="width">798</xsl:attribute>
+                            <xsl:attribute name="height">800</xsl:attribute>
+                            <xsl:attribute name="src">http://nubsk.edu.mk/index.php?format=html&amp;tmpl=component&amp;option=com_breezingforms&amp;ff_form=1&amp;ff_page=1</xsl:attribute>
+                            <xsl:attribute name="frameborder">0</xsl:attribute>
+                            <xsl:comment/>
+                        </xsl:element>
+                    </div>
+                </xsl:when>
+                <xsl:when test="starts-with($request-uri, 'page/terms')">
+                    <div>
+                        <h1>Услови на користење</h1>
+                        <h3>Дигиталната библиотека при</h3>
+                        <p>преку својот портал Dlib.mk, на своите посетители им овозможува пристап до различни библиографски содржини како што се книги, ракописи, списанија и периодични публикации, статии, географски карти, ноти, научни извештаи, проекти и тн.</p>
+                        <h3>Дигиталната библиотека при</h3>
+                        <p>преку својот портал Dlib.mk, на своите посетители им овозможува пристап до различни библиографски содржини како што се книги, ракописи, списанија и периодични публикации, статии, географски карти, ноти, научни извештаи, проекти и тн.</p>
+                        <h3>Дигиталната библиотека при</h3>
+                        <p>преку својот портал Dlib.mk, на своите посетители им овозможува пристап до различни библиографски содржини како што се книги, ракописи, списанија и периодични публикации, статии, географски карти, ноти, научни извештаи, проекти и тн.</p>
+                        <h3>Дигиталната библиотека при</h3>
+                        <p>преку својот портал Dlib.mk, на своите посетители им овозможува пристап до различни библиографски содржини како што се книги, ракописи, списанија и периодични публикации, статии, географски карти, ноти, научни извештаи, проекти и тн.</p>
+                        <h3>Дигиталната библиотека при</h3>
+                        <p>преку својот портал Dlib.mk, на своите посетители им овозможува пристап до различни библиографски содржини како што се книги, ракописи, списанија и периодични публикации, статии, географски карти, ноти, научни извештаи, проекти и тн.</p>
+                        <h3>Дигиталната библиотека при</h3>
+                        <p>преку својот портал Dlib.mk, на своите посетители им овозможува пристап до различни библиографски содржини како што се книги, ракописи, списанија и периодични публикации, статии, географски карти, ноти, научни извештаи, проекти и тн.</p>
+                        <h3>Дигиталната библиотека при</h3>
+                        <p>преку својот портал Dlib.mk, на своите посетители им овозможува пристап до различни библиографски содржини како што се книги, ракописи, списанија и периодични публикации, статии, географски карти, ноти, научни извештаи, проекти и тн.</p>
+                        <h3>Дигиталната библиотека при</h3>
+                        <p>преку својот портал Dlib.mk, на своите посетители им овозможува пристап до различни библиографски содржини како што се книги, ракописи, списанија и периодични публикации, статии, географски карти, ноти, научни извештаи, проекти и тн.</p>
+                        <h3>Дигиталната библиотека при</h3>
+                        <p>преку својот портал Dlib.mk, на своите посетители им овозможува пристап до различни библиографски содржини како што се книги, ракописи, списанија и периодични публикации, статии, географски карти, ноти, научни извештаи, проекти и тн.</p>
+                    </div>
+                </xsl:when>
+                <xsl:when test="starts-with($request-uri, 'page/policy')">
+                    <div>
+                        <h1>Политика на приватност</h1>
+                        <h3>Дигиталната библиотека при</h3>
+                        <p>преку својот портал Dlib.mk, на своите посетители им овозможува пристап до различни библиографски содржини како што се книги, ракописи, списанија и периодични публикации, статии, географски карти, ноти, научни извештаи, проекти и тн.</p>
+                        <h3>Дигиталната библиотека при</h3>
+                        <p>преку својот портал Dlib.mk, на своите посетители им овозможува пристап до различни библиографски содржини како што се книги, ракописи, списанија и периодични публикации, статии, географски карти, ноти, научни извештаи, проекти и тн.</p>
+                        <h3>Дигиталната библиотека при</h3>
+                        <p>преку својот портал Dlib.mk, на своите посетители им овозможува пристап до различни библиографски содржини како што се книги, ракописи, списанија и периодични публикации, статии, географски карти, ноти, научни извештаи, проекти и тн.</p>
+                        <h3>Дигиталната библиотека при</h3>
+                        <p>преку својот портал Dlib.mk, на своите посетители им овозможува пристап до различни библиографски содржини како што се книги, ракописи, списанија и периодични публикации, статии, географски карти, ноти, научни извештаи, проекти и тн.</p>
+                        <h3>Дигиталната библиотека при</h3>
+                        <p>преку својот портал Dlib.mk, на своите посетители им овозможува пристап до различни библиографски содржини како што се книги, ракописи, списанија и периодични публикации, статии, географски карти, ноти, научни извештаи, проекти и тн.</p>
+                        <h3>Дигиталната библиотека при</h3>
+                        <p>преку својот портал Dlib.mk, на своите посетители им овозможува пристап до различни библиографски содржини како што се книги, ракописи, списанија и периодични публикации, статии, географски карти, ноти, научни извештаи, проекти и тн.</p>
+                        <h3>Дигиталната библиотека при</h3>
+                        <p>преку својот портал Dlib.mk, на своите посетители им овозможува пристап до различни библиографски содржини како што се книги, ракописи, списанија и периодични публикации, статии, географски карти, ноти, научни извештаи, проекти и тн.</p>
+                        <h3>Дигиталната библиотека при</h3>
+                        <p>преку својот портал Dlib.mk, на своите посетители им овозможува пристап до различни библиографски содржини како што се книги, ракописи, списанија и периодични публикации, статии, географски карти, ноти, научни извештаи, проекти и тн.</p>
+                        <h3>Дигиталната библиотека при</h3>
+                        <p>преку својот портал Dlib.mk, на своите посетители им овозможува пристап до различни библиографски содржини како што се книги, ракописи, списанија и периодични публикации, статии, географски карти, ноти, научни извештаи, проекти и тн.</p>
+                    </div>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:apply-templates />
+                </xsl:otherwise>
+            </xsl:choose>
+        </div>
+    </xsl:template>
+    <xsl:template match="dri:meta">
+    </xsl:template>
+    <xsl:template name="addJavascript">
+        <xsl:variable name="jqueryVersion">
+            <xsl:text>1.6.2</xsl:text>
+        </xsl:variable>
+        <xsl:variable name="protocol">
+            <xsl:choose>
+                <xsl:when test="starts-with(confman:getProperty('dspace.baseUrl'), 'https://')">
+                    <xsl:text>https://</xsl:text>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:text>http://</xsl:text>
+                </xsl:otherwise>
+            </xsl:choose>
+        </xsl:variable>
+        <script type="text/javascript" src="{concat($protocol, 'ajax.googleapis.com/ajax/libs/jquery/', $jqueryVersion ,'/jquery.min.js')}">&#160;</script>
+        <xsl:variable name="localJQuerySrc">
+                <xsl:value-of select="/dri:document/dri:meta/dri:pageMeta/dri:metadata[@element='contextPath'][not(@qualifier)]"/>
+            <xsl:text>/static/js/jquery-</xsl:text>
+            <xsl:value-of select="$jqueryVersion"/>
+            <xsl:text>.min.js</xsl:text>
+        </xsl:variable>
+        <script type="text/javascript">
+            <xsl:text disable-output-escaping="yes">!window.jQuery &amp;&amp; document.write('&lt;script type="text/javascript" src="</xsl:text><xsl:value-of
+                select="$localJQuerySrc"/><xsl:text disable-output-escaping="yes">"&gt;&#160;&lt;\/script&gt;')</xsl:text>
+        </script>
+        <xsl:for-each select="/dri:document/dri:meta/dri:pageMeta/dri:metadata[@element='javascript'][@qualifier='url']">
+            <script type="text/javascript">
+                <xsl:attribute name="src">
+                    <xsl:value-of select="."/>
+                </xsl:attribute>&#160;</script>
+        </xsl:for-each>
+        <xsl:for-each select="/dri:document/dri:meta/dri:pageMeta/dri:metadata[@element='javascript'][not(@qualifier)]">
+            <script type="text/javascript">
+                <xsl:attribute name="src">
+                    <xsl:value-of select="/dri:document/dri:meta/dri:pageMeta/dri:metadata[@element='contextPath'][not(@qualifier)]"/>
+                    <xsl:text>/themes/</xsl:text>
+                    <xsl:value-of select="/dri:document/dri:meta/dri:pageMeta/dri:metadata[@element='theme'][@qualifier='path']"/>
+                    <xsl:text>/</xsl:text>
+                    <xsl:value-of select="."/>
+                </xsl:attribute>&#160;</script>
+        </xsl:for-each>
+        <script src="/static/js/plugins.js" type="text/javascript">&#160;</script>
+        <xsl:for-each select="/dri:document/dri:meta/dri:pageMeta/dri:metadata[@element='javascript'][@qualifier='static']">
+            <xsl:choose>
+                <xsl:when test="text() = 'static/js/choice-support.js'">
+                    <script type="text/javascript">
+                        <xsl:attribute name="src">
+                            <xsl:value-of select="/dri:document/dri:meta/dri:pageMeta/dri:metadata[@element='contextPath'][not(@qualifier)]"/>
+                            <xsl:text>/themes/</xsl:text>
+                            <xsl:value-of select="/dri:document/dri:meta/dri:pageMeta/dri:metadata[@element='theme'][@qualifier='path']"/>
+                            <xsl:text>/lib/js/choice-support.js</xsl:text>
+                        </xsl:attribute>&#160;</script>
+                </xsl:when>
+                <xsl:when test="not(starts-with(text(), 'static/js/scriptaculous'))">
+                    <script type="text/javascript">
+                        <xsl:attribute name="src">
+                            <xsl:value-of
+                                    select="/dri:document/dri:meta/dri:pageMeta/dri:metadata[@element='contextPath'][not(@qualifier)]"/>
+                            <xsl:text>/</xsl:text>
+                            <xsl:value-of select="."/>
+                        </xsl:attribute>&#160;</script>
+                </xsl:when>
+            </xsl:choose>
+        </xsl:for-each>
+        <xsl:if test="dri:body/dri:div[@n='lookup']">
+          <xsl:call-template name="choiceLookupPopUpSetup"/>
+        </xsl:if>
+        <xsl:text disable-output-escaping="yes">&lt;!--[if lt IE 7 ]&gt;</xsl:text>
+        <script type="text/javascript">
+            <xsl:attribute name="src">
+                <xsl:value-of select="/dri:document/dri:meta/dri:pageMeta/dri:metadata[@element='contextPath'][not(@qualifier)]"/>
+                <xsl:text>/themes/</xsl:text>
+                <xsl:value-of select="/dri:document/dri:meta/dri:pageMeta/dri:metadata[@element='theme'][@qualifier='path']"/>
+                <xsl:text>/lib/js/DD_belatedPNG_0.0.8a.js?v=1</xsl:text>
+            </xsl:attribute>&#160;</script>
+        <script type="text/javascript">
+            <xsl:text>DD_belatedPNG.fix('#ds-header-logo');DD_belatedPNG.fix('#ds-footer-logo');$.each($('img[src$=png]'), function() {DD_belatedPNG.fixPng(this);});</xsl:text>
+        </script>
+        <xsl:text disable-output-escaping="yes" >&lt;![endif]--&gt;</xsl:text>
+        <script type="text/javascript">
+            runAfterJSImports.execute();
+        </script>
+        <script type="text/javascript">var switchTo5x=true;</script>
+        <script type="text/javascript" src="http://w.sharethis.com/button/buttons.js">&#160;</script>
+        <script type="text/javascript">stLight.options({publisher: "enter-your-number-here", onhover: false});</script>
+        <xsl:if test="/dri:document/dri:meta/dri:pageMeta/dri:metadata[@element='google'][@qualifier='analytics']">
+            <script type="text/javascript"><xsl:text>
+                   var _gaq = _gaq || [];
+                   _gaq.push(['_setAccount', '</xsl:text><xsl:value-of select="/dri:document/dri:meta/dri:pageMeta/dri:metadata[@element='google'][@qualifier='analytics']"/><xsl:text>']);
+                   _gaq.push(['_trackPageview']);
+
+                   (function() {
+                       var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+                       ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+                       var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+                   })();
+           </xsl:text></script>
+        </xsl:if>
+    </xsl:template>
+</xsl:stylesheet>
